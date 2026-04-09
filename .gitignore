@@ -1,1 +1,7 @@
 .vscode
+.Rdata
+.Rhistory
+.Rproj.user
+.Rproj
+*.Rout
+*.csv
