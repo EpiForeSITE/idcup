@@ -51,6 +51,13 @@ census_age <- do.call(rbind, lapply(seq_len(nrow(city_info)), function(i) {
     }
   )
 
+  message(
+    sprintf(
+      "Got census data for city '%s' (county: '%s', state FIPS: '%s', year: 2024).",
+      city_info$city[i], city_info$county[i], state_fips
+    )
+  )
+
   data.frame(
     city      = city_info$city[i],
     age_group = city_data$age_labels,
@@ -59,4 +66,4 @@ census_age <- do.call(rbind, lapply(seq_len(nrow(city_info)), function(i) {
   )
 }))
 
-saveRDS(census_age, "data/census_age.rds")
+write.csv(census_age, "data/census_age.csv", row.names = FALSE)

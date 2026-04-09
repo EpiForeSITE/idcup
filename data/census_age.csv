@@ -1,0 +1,199 @@
+"city","age_group","total"
+"Los Angeles","0to4",474835
+"Los Angeles","5to9",533173
+"Los Angeles","10to14",569509
+"Los Angeles","15to19",616715
+"Los Angeles","20to24",621890
+"Los Angeles","25to29",709294
+"Los Angeles","30to34",792381
+"Los Angeles","35to39",737547
+"Los Angeles","40to44",670645
+"Los Angeles","45to49",620012
+"Los Angeles","50to54",633726
+"Los Angeles","55to59",613151
+"Los Angeles","60to64",589127
+"Los Angeles","65to69",510131
+"Los Angeles","70to74",400846
+"Los Angeles","75to79",294190
+"Los Angeles","80to84",185245
+"Los Angeles","85plus",184762
+"San Francisco","0to4",32604
+"San Francisco","5to9",30652
+"San Francisco","10to14",29977
+"San Francisco","15to19",33006
+"San Francisco","20to24",42329
+"San Francisco","25to29",76813
+"San Francisco","30to34",87245
+"San Francisco","35to39",76144
+"San Francisco","40to44",61365
+"San Francisco","45to49",52391
+"San Francisco","50to54",53526
+"San Francisco","55to59",50965
+"San Francisco","60to64",47760
+"San Francisco","65to69",43688
+"San Francisco","70to74",39174
+"San Francisco","75to79",30107
+"San Francisco","80to84",17980
+"San Francisco","85plus",21800
+"New York City","0to4",63199
+"New York City","5to9",59980
+"New York City","10to14",60524
+"New York City","15to19",72428
+"New York City","20to24",115691
+"New York City","25to29",185836
+"New York City","30to34",167982
+"New York City","35to39",133213
+"New York City","40to44",109329
+"New York City","45to49",96903
+"New York City","50to54",96753
+"New York City","55to59",95824
+"New York City","60to64",93323
+"New York City","65to69",84842
+"New York City","70to74",75813
+"New York City","75to79",62968
+"New York City","80to84",42711
+"New York City","85plus",43345
+"Boston","0to4",37980
+"Boston","5to9",33337
+"Boston","10to14",32461
+"Boston","15to19",55682
+"Boston","20to24",75690
+"Boston","25to29",91930
+"Boston","30to34",81738
+"Boston","35to39",63292
+"Boston","40to44",48620
+"Boston","45to49",40626
+"Boston","50to54",40084
+"Boston","55to59",40981
+"Boston","60to64",40380
+"Boston","65to69",35685
+"Boston","70to74",28211
+"Boston","75to79",20435
+"Boston","80to84",12987
+"Boston","85plus",13025
+"Houston","0to4",335732
+"Houston","5to9",353768
+"Houston","10to14",357102
+"Houston","15to19",360081
+"Houston","20to24",349255
+"Houston","25to29",371642
+"Houston","30to34",395786
+"Houston","35to39",377030
+"Houston","40to44",356740
+"Houston","45to49",318420
+"Houston","50to54",300477
+"Houston","55to59",267731
+"Houston","60to64",249821
+"Houston","65to69",216664
+"Houston","70to74",165188
+"Houston","75to79",114016
+"Houston","80to84",65577
+"Houston","85plus",54272
+"Dallas","0to4",179439
+"Dallas","5to9",178102
+"Dallas","10to14",178187
+"Dallas","15to19",186464
+"Dallas","20to24",192790
+"Dallas","25to29",227283
+"Dallas","30to34",219480
+"Dallas","35to39",191366
+"Dallas","40to44",173861
+"Dallas","45to49",158734
+"Dallas","50to54",155030
+"Dallas","55to59",145397
+"Dallas","60to64",140041
+"Dallas","65to69",115786
+"Dallas","70to74",87081
+"Dallas","75to79",61064
+"Dallas","80to84",35755
+"Dallas","85plus",30168
+"Philadelphia","0to4",91327
+"Philadelphia","5to9",91067
+"Philadelphia","10to14",90647
+"Philadelphia","15to19",103934
+"Philadelphia","20to24",107511
+"Philadelphia","25to29",135111
+"Philadelphia","30to34",149024
+"Philadelphia","35to39",127150
+"Philadelphia","40to44",99446
+"Philadelphia","45to49",83153
+"Philadelphia","50to54",81896
+"Philadelphia","55to59",84159
+"Philadelphia","60to64",87002
+"Philadelphia","65to69",80271
+"Philadelphia","70to74",63309
+"Philadelphia","75to79",45241
+"Philadelphia","80to84",27211
+"Philadelphia","85plus",26457
+"Atlanta","0to4",57690
+"Atlanta","5to9",59710
+"Atlanta","10to14",63500
+"Atlanta","15to19",71681
+"Atlanta","20to24",74951
+"Atlanta","25to29",88647
+"Atlanta","30to34",95867
+"Atlanta","35to39",85105
+"Atlanta","40to44",77727
+"Atlanta","45to49",71450
+"Atlanta","50to54",73620
+"Atlanta","55to59",64511
+"Atlanta","60to64",59098
+"Atlanta","65to69",48560
+"Atlanta","70to74",38011
+"Atlanta","75to79",29026
+"Atlanta","80to84",16539
+"Atlanta","85plus",14661
+"Seattle","0to4",117390
+"Seattle","5to9",122428
+"Seattle","10to14",123840
+"Seattle","15to19",128384
+"Seattle","20to24",141213
+"Seattle","25to29",204623
+"Seattle","30to34",227254
+"Seattle","35to39",206500
+"Seattle","40to44",178468
+"Seattle","45to49",149954
+"Seattle","50to54",143875
+"Seattle","55to59",131131
+"Seattle","60to64",124279
+"Seattle","65to69",109374
+"Seattle","70to74",88479
+"Seattle","75to79",66104
+"Seattle","80to84",39346
+"Seattle","85plus",37569
+"Miami","0to4",151686
+"Miami","5to9",155691
+"Miami","10to14",152243
+"Miami","15to19",168129
+"Miami","20to24",171526
+"Miami","25to29",182931
+"Miami","30to34",203189
+"Miami","35to39",206156
+"Miami","40to44",195032
+"Miami","45to49",190313
+"Miami","50to54",201530
+"Miami","55to59",192482
+"Miami","60to64",179272
+"Miami","65to69",145802
+"Miami","70to74",121687
+"Miami","75to79",92835
+"Miami","80to84",65099
+"Miami","85plus",62858
+"Kansas City","0to4",43888
+"Kansas City","5to9",46102
+"Kansas City","10to14",46969
+"Kansas City","15to19",46075
+"Kansas City","20to24",44973
+"Kansas City","25to29",55256
+"Kansas City","30to34",56707
+"Kansas City","35to39",51338
+"Kansas City","40to44",48063
+"Kansas City","45to49",41389
+"Kansas City","50to54",40925
+"Kansas City","55to59",40136
+"Kansas City","60to64",44662
+"Kansas City","65to69",39760
+"Kansas City","70to74",31683
+"Kansas City","75to79",22791
+"Kansas City","80to84",13998
+"Kansas City","85plus",12647
