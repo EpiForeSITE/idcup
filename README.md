@@ -1,0 +1,79 @@
+# idcup
+
+Agent-based measles outbreak simulations across major U.S. cities, built on [epiworldR](https://github.com/UofUEpiBio/epiworldR) and the [measles](https://github.com/UofUEpiBio/measles) R package. Scenarios are parameterized Quarto documents that can be rendered per city using census-derived age structure and MMR vaccination coverage.
+
+## Cities covered
+
+Los Angeles, San Francisco, New York City, Boston, Houston, Dallas, Philadelphia, Atlanta, Seattle, Miami, Kansas City.
+
+## Repository layout
+
+```
+data/
+  census_age.csv       Age-structured population counts by city (generated)
+  census_age.R         Script to pull county-level census data via multigroup.vaccine
+  population.csv       Total city populations (source: census.gov)
+  mmr.csv              MMR vaccination estimates by city (source: CDC MMWR 2023-24)
+scenarios/
+  template.qmd         Parameterized Quarto scenario document
+  data/                City-specific data symlinked/copied for rendering
+Makefile               Targets for data generation and package updates
+```
+
+## Getting started
+
+### Prerequisites
+
+Install the required R packages from GitHub:
+
+```r
+# Core simulation engine
+remotes::install_github("UofUEpiBio/epiworldR")
+
+# Measles model and helpers
+remotes::install_github("UofUEpiBio/measles")
+
+# Census data utilities (used by census_age.R)
+remotes::install_github("EpiForeSITE/multigroup.vaccine")
+```
+
+Or use the Makefile targets:
+
+```bash
+make update-epiworldr
+make update-measles
+```
+
+### Regenerate census age data
+
+```bash
+make data/census_age.csv
+```
+
+This calls `data/census_age.R`, which queries 2024 county-level census data for each city and writes `data/census_age.csv`.
+
+### Run a scenario
+
+Render the template for a specific city:
+
+```bash
+quarto render scenarios/template.qmd -P city:"Miami"
+```
+
+## Data sources
+
+| File | Source |
+|------|--------|
+| `population.csv` | U.S. Census Bureau |
+| `census_age.csv` | U.S. Census Bureau (2024, county-level, via `multigroup.vaccine`) |
+| `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
+
+## Model overview
+
+Each scenario runs an age-structured `ModelMeaslesMixing` simulation with:
+
+- Age-stratified population from census data
+- Proportional contact mixing matrix
+- MMR vaccine efficacy of 97%
+- Configurable vaccination coverage, hospitalization probability, quarantine/isolation parameters, and contact tracing
+- 50 stochastic replicate runs over 100 simulated days
