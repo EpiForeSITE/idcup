@@ -21,11 +21,8 @@ if (!exists("params")) {
 census_age <- fread("data/census_age.csv")[city == params$city]
 population <- fread("data/population.csv")[city == params$city]
 
-# Mixing matrix (dummy for the model)
-gnames <- unique(census_age$age_group)
-mixing <- matrix(1, nrow = length(gnames), ncol = length(gnames))
-dimnames(mixing) <- list(gnames, gnames)
-mixing[] <- mixing/rowSums(mixing)
+# Mixing matrix (age-based, from POLYMOD survey data)
+mixing <- readRDS("data/mixing_matrix.rds")[[params$city]]
 ```
 
 ```{r}
