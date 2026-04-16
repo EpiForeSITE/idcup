@@ -1,5 +1,5 @@
 # Source: https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm
-city,geography_used,mmr_estimate_pcent,source
+city,geography_used,vacc_rate,source
 Los Angeles,California,96.2,CDC MMWR 2023-24 kindergarten table
 San Francisco,California,96.2,CDC MMWR 2023-24 kindergarten table
 New York City,New York City,96.7,CDC MMWR 2023-24 kindergarten table
@@ -7,7 +7,7 @@ Boston,Massachusetts,96.3,CDC MMWR 2023-24 kindergarten table
 Houston,Houston,93.6,CDC MMWR 2023-24 kindergarten table
 Dallas,Texas,94.3,CDC MMWR 2023-24 kindergarten table
 Philadelphia,Pennsylvania,93.5,CDC MMWR 2023-24 kindergarten table
-Atlanta,Georgia,88.4+,CDC MMWR 2023-24 kindergarten table
+Atlanta,Georgia,88.4,CDC MMWR 2023-24 kindergarten table
 Seattle,Washington,91.3,CDC MMWR 2023-24 kindergarten table
-Miami,Florida,88.1+,CDC MMWR 2023-24 kindergarten table
+Miami,Florida,88.1,CDC MMWR 2023-24 kindergarten table
 Kansas City,Missouri,90.4,CDC MMWR 2023-24 kindergarten table

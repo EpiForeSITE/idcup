@@ -61,13 +61,19 @@ if (!(params$city %in% available_cities)) {
 }
 
 mixing <- mixing_matrices[[params$city]]
+
+# Retrieving vaccination rate
+vacc_rate <- fread(
+  "data/mmr.csv",
+  comment.char = "#"
+  )[city == params$city]$vacc_rate / 100
 ```
 
 ```{r}
 #| label: adjusting-population
 N <- min(params$max_pop, sum(population$Population))
 census_age[, total := ceiling(total/sum(total) * N)]
-census_age[, vacc_rate := .9]
+census_age[, vacc_rate := vacc_rate]
 
 N <- sum(census_age$total)
 ```
