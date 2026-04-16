@@ -68,6 +68,27 @@ quarto render scenarios/template.qmd -P city:"Miami"
 | `census_age.csv` | U.S. Census Bureau (2024, county-level, via `multigroup.vaccine`) |
 | `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
 
+Relevant age groups:
+
+- 0to4
+- 5to9
+- 10to14
+- 15to19
+- 20to24
+- 25to29
+- 30to34
+- 35to39
+- 40to44
+- 45to49
+- 50to54
+- 55to59
+- 60to64
+- 65to69
+- 70to74
+- 75to79
+- 80to84
+- 85plus
+
 ## Model overview
 
 Each scenario runs an age-structured `ModelMeaslesMixing` simulation with:
