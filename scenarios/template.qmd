@@ -2,32 +2,70 @@
 format: gfm
 params:
     city: "Miami"
+    max_pop: 100000
+    nthreads: 4
+    echo: false
+    seed: 8812
+    ndays: 100
+    nsims: 50
 ---
 
 ## Preparing the environment
 
 ```{r}
+#| label: loading-libraries
+#| warning: false
+#| message: false
 library(measles)
 library(data.table)
 
 if (!exists("params")) {
-  params <- list(city = "Miami")
+  params <- list(
+    city = "Miami",
+    max_pop = 100000,
+    nthreads = 4,
+    echo = FALSE,
+    seed = 8812,
+    ndays = 100,
+    nsims = 50
+    )
 }
+
+knitr::opts_chunk$set(
+  echo = params$echo,
+  warning = FALSE,
+  message = FALSE
+)
+
 ```
 
 
 ```{r}
+#| label: loading-data
 # Population matrix
 census_age <- fread("data/census_age.csv")[city == params$city]
 population <- fread("data/population.csv")[city == params$city]
 
 # Mixing matrix (age-based, from POLYMOD survey data)
-mixing <- readRDS("data/mixing_matrix.rds")[[params$city]]
+mixing_matrices <- readRDS("data/mixing_matrix.rds")
+available_cities <- names(mixing_matrices)
+
+if (!(params$city %in% available_cities)) {
+  stop(
+    sprintf(
+      "Unknown city '%s' in params$city. Available cities in data/mixing_matrix.rds: %s",
+      params$city,
+      paste(available_cities, collapse = ", ")
+    )
+  )
+}
+
+mixing <- mixing_matrices[[params$city]]
 ```
 
 ```{r}
 #| label: adjusting-population
-N <- sum(population$Population) * .5
+N <- min(params$max_pop, sum(population$Population))
 census_age[, total := ceiling(total/sum(total) * N)]
 census_age[, vacc_rate := .9]
 
@@ -37,7 +75,7 @@ N <- sum(census_age$total)
 ## Baseline scenario
 
 ```{r}
-
+#| label: creating-model
 
 # Finding hospitalization rate for
 # a 10% hospitalization probability
@@ -49,7 +87,7 @@ h_rate <- 0.1 * (1 / 3) / (1 - 0.1)
 
 measles_model <- ModelMeaslesMixing(
   n                            = N,
-  prevalence                   = 1 / N,
+  prevalence                   = 1,
   contact_rate                 = 15 / 0.9 / 4,
   transmission_rate            = 0.9,
   vax_efficacy                 = 0.97,
@@ -70,6 +108,7 @@ measles_model <- ModelMeaslesMixing(
 
 
 ```{r}
+#| label: adding-entities
 # Adding the entities to the model
 add_entities_from_dataframe(
   model = measles_model,
@@ -83,6 +122,7 @@ add_entities_from_dataframe(
 
 
 ```{r}
+#| label: setting-distribution
 # Creating the distribution function
 dist_fun <- distribute_tool_to_entities(
   prevalence = census_age$vacc_rate,
@@ -97,18 +137,28 @@ measles_model |>
 
 
 ```{r}
+#| label: distribute-initial-cases
+get_virus(measles_model, 0L) |>
+  set_distribution_virus(
+    distfun = distribute_virus_randomly(prevalence = 1, as_proportion = FALSE)
+  )
+```
+
+```{r}
+#| label: running-simulations
 measles_model |>
   run_multiple(
-    ndays = 100,
-    nsims = 50,
-    seed  = 8812,
+    ndays = params$ndays,
+    nsims = params$nsims,
+    seed  = params$seed,
     saver = make_saver("outbreak_size", "hospitalizations"),
-    nthreads = 4L
+    nthreads = params$nthreads
   )
 ```
 
 
 ```{r}
+#| label: extracting-results
 # Extracting the results
 ans <- measles_model |>
   run_multiple_get_results(
@@ -116,7 +166,9 @@ ans <- measles_model |>
   )
 
 # Taking a look at the structure
-str(ans)
+if (params$echo) {
+  str(ans)
+}
 
 # Converting into data.table format for convenience
 outbreak_size <- ans$outbreak_size |> as.data.table()
@@ -125,6 +177,7 @@ hospitalizations <- ans$hospitalizations |> as.data.table()
 
 
 ```{r}
+#| label: plotting-outbreak-size1
 # Aggregating to get the final
 with(
   outbreak_size,
@@ -144,6 +197,7 @@ with(
 
 
 ```{r}
+#| label: plotting-outbreak-size2
 # Aggregating to get the final
 with(
   outbreak_size[date == max(date)],
@@ -156,4 +210,9 @@ with(
     )
 })
 ```
+
+
+## Session info
+
+This document was generated using the `{measles}` R package version `r packageVersion("measles")` and the `{epiworldR}` package version `r packageVersion("epiworldR")` on `r Sys.Date()`. We used R version `r getRversion()`, running on `r Sys.info()[['sysname']]` with `r Sys.info()[['machine']]` architecture.
 
