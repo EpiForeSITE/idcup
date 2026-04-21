@@ -21,7 +21,7 @@ update-measles:
 	installGithub.r UofUEpiBio/measles@$(MEASLES_TREE)
 
 CITY ?= Miami
-scenario: scenarios/template.qmd data/mixing_matrix.rds 
+scenario: scenarios/template.qmd
 	cp scenarios/template.qmd "scenarios/$(CITY).qmd"
 	quarto render "scenarios/$(CITY).qmd" --to gfm \
 		 --output "$(CITY).md" \

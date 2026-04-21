@@ -10,6 +10,8 @@ params:
     nsims: 200
 ---
 
+# Measles outbreak simulation in `r params$city`
+
 ::: {.callout-caution title="Work in progress"}
 This scenario simulation is a work in progress. We are still reviewing the model, assumptions, and paramters. Please be mindful of this when interpreting the results.
 :::
@@ -74,9 +76,26 @@ vacc_rate <- fread(
   )[city == params$city]$vacc_rate / 100
 ```
 
+
+```{r}
+#| label: checking-size
+#| echo: false
+#| results: "asis"
+if (params$max_pop < sum(population$Population)) {
+  cat(
+    "::: {.callout-warning}",
+    sprintf("The total population in the census data (%i)", sum(population$Population)),
+    sprintf("exceeds params$max_pop (%i).", params$max_pop),
+    "The population will be scaled down to fit within the specified maximum population size.",
+    ":::", sep = "\n"
+  )
+}
+```
+
 ```{r}
 #| label: adjusting-population
 N <- min(params$max_pop, sum(population$Population))
+
 census_age[, total := ceiling(total/sum(total) * N)]
 census_age[, vacc_rate := vacc_rate]
 
