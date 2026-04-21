@@ -9,23 +9,70 @@ permissions:
   contents: read
 
 jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    outputs:
+      image: ${{ steps.vars.outputs.image }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image variables
+        id: vars
+        run: |
+          REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          IMAGE="ghcr.io/${REPO}:sha-${SHA}"
+          LATEST="ghcr.io/${REPO}:latest"
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "latest=${LATEST}" >> $GITHUB_OUTPUT
+          # Only tag/cache :latest on pushes to main
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "tags<<EOF" >> $GITHUB_OUTPUT
+            echo "${IMAGE}" >> $GITHUB_OUTPUT
+            echo "${LATEST}" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            echo "cache_to=type=inline" >> $GITHUB_OUTPUT
+          else
+            echo "tags=${IMAGE}" >> $GITHUB_OUTPUT
+            echo "cache_to=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push container image
+        uses: docker/build-push-action@v6
+        with:
+          context: .devcontainer
+          file: .devcontainer/Containerfile
+          push: true
+          tags: ${{ steps.vars.outputs.tags }}
+          cache-from: type=registry,ref=${{ steps.vars.outputs.latest }}
+          cache-to: ${{ steps.vars.outputs.cache_to }}
+
   render:
+    needs: build-container
+    permissions:
+      packages: read
     strategy:
       matrix:
         city: ["Los Angeles", "San Francisco", "New York City", "Boston", "Houston", "Dallas", "Philadelphia", "Atlanta", "Seattle", "Miami", "Kansas City"]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/rocker-org/devcontainer/r-ver:4.5
+      image: ${{ needs.build-container.outputs.image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Install R dependencies
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          install2.r --error data.table quarto socialmixr multigroup.vaccine ggplot2
-          installGithub.r UofUEpiBio/measles@gvegayon/fast-mixing
+        uses: actions/checkout@v4
 
       - name: Render reports
         run: |
