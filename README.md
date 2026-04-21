@@ -141,7 +141,7 @@ flowchart TB
 
 ### Quarantine Process
 
-```
+```mermaid
 flowchart LR
     Start((Start)) --> infected{"Already<br>quarantined<br>or isolated?"}
     infected -->|Yes|End((End))
