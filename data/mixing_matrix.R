@@ -36,7 +36,7 @@ mixing_matrix <- lapply(cities, function(city_name) {
   dimnames(mat) <- list(city_data$age_group, city_data$age_group)
 
   # Make row-stochastic (each row sums to 1)
-  mat <- mat / rowSums(mat)
+  # mat <- mat / rowSums(mat)
 
   mat
 

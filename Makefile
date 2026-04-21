@@ -20,4 +20,14 @@ update-epiworldr:
 update-measles:
 	installGithub.r UofUEpiBio/measles@$(MEASLES_TREE)
 
-.PHONY: help update-epiworldr update-measles
+CITY ?= Miami
+scenario: scenarios/template.qmd
+	cp scenarios/template.qmd "scenarios/$(CITY).qmd"
+	quarto render "scenarios/$(CITY).qmd" --to gfm \
+		 --output "$(CITY).md" \
+		 -P city="$(CITY)" \
+		 -P max_pop=50000 && \
+	mv "$(CITY).md" "scenarios/$(CITY).md" && \
+	rm "scenarios/$(CITY).qmd"
+
+.PHONY: help update-epiworldr update-measles scenario

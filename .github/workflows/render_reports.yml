@@ -1,0 +1,49 @@
+name: Render reports
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  render:
+    strategy:
+      matrix:
+        city: ["Los Angeles", "San Francisco", "New York City", "Boston", "Houston", "Dallas", "Philadelphia", "Atlanta", "Seattle", "Miami", "Kansas City"]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/rocker-org/devcontainer/r-ver:4.5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install R dependencies
+        run: |
+          install2.r --error data.table quarto socialmixr multigroup.vaccine ggplot2
+          installGithub.r UofUEpiBio/measles@gvegayon/fast-mixing
+
+      - name: Render reports
+        run: |
+          CITY="${{ matrix.city }}" make scenarios
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: reports-${{ matrix.city }}
+          path: scenarios/{{ matrix.city }}*
+  
+  combine:
+    needs: render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all reports
+        uses: actions/download-artifact@v7
+        with:
+          path: scenarios/
+          pattern: reports-*
+
+      - name: Upload as a single file
+        uses: actions/upload-artifact@v7
+        with:
+          name: all-reports
+          path: scenarios/*

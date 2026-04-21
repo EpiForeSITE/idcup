@@ -2,13 +2,19 @@
 format: gfm
 params:
     city: "Miami"
-    max_pop: 100000
-    nthreads: 4
+    max_pop: 1000000
+    nthreads: 2
     echo: false
     seed: 8812
-    ndays: 100
-    nsims: 50
+    ndays: 60
+    nsims: 200
 ---
+
+# Measles outbreak simulation in `r params$city`
+
+::: {.callout-caution title="Work in progress"}
+This scenario simulation is a work in progress. We are still reviewing the model, assumptions, and paramters. Please be mindful of this when interpreting the results.
+:::
 
 ## Preparing the environment
 
@@ -16,6 +22,7 @@ params:
 #| label: loading-libraries
 #| warning: false
 #| message: false
+#| echo: false
 library(measles)
 library(data.table)
 
@@ -26,8 +33,8 @@ if (!exists("params")) {
     nthreads = 4,
     echo = FALSE,
     seed = 8812,
-    ndays = 100,
-    nsims = 50
+    ndays = 60,
+    nsims = 200
     )
 }
 
@@ -69,13 +76,59 @@ vacc_rate <- fread(
   )[city == params$city]$vacc_rate / 100
 ```
 
+
+```{r}
+#| label: checking-size
+#| echo: false
+#| results: "asis"
+if (params$max_pop < sum(population$Population)) {
+  cat(
+    "::: {.callout-warning}",
+    sprintf("The total population in the census data (%i)", sum(population$Population)),
+    sprintf("exceeds params$max_pop (%i).", params$max_pop),
+    "The population will be scaled down to fit within the specified maximum population size.",
+    ":::", sep = "\n"
+  )
+}
+```
+
 ```{r}
 #| label: adjusting-population
 N <- min(params$max_pop, sum(population$Population))
+
 census_age[, total := ceiling(total/sum(total) * N)]
 census_age[, vacc_rate := vacc_rate]
 
 N <- sum(census_age$total)
+```
+
+```{r}
+#| label: calibrating-mixing
+calibrate_cm <- function(R0, t_infect) {
+
+  zeros <- rep(0, length(census_age$total))
+
+  obj <- \(s) {
+    r_eff <- multigroup.vaccine::vaxrepnum(
+      meaninf = 4,
+      popsize = census_age$total,
+      trmat = mixing * s * t_infect,
+      initR = zeros,
+      initV = zeros,
+      vaxeff = 0
+    )
+
+    (r_eff - R0)^2
+  }
+
+  stats::optimize(
+    f = obj,
+    interval = c(0, 1000)
+  )$minimum
+
+}
+
+calib_scale <- calibrate_cm(R0 = 15, t_infect = 0.2)
 ```
 
 ## Baseline scenario
@@ -94,10 +147,9 @@ h_rate <- 0.1 * (1 / 3) / (1 - 0.1)
 measles_model <- ModelMeaslesMixing(
   n                            = N,
   prevalence                   = 1,
-  contact_rate                 = 15 / 0.9 / 4,
-  transmission_rate            = 0.9,
+  transmission_rate            = 0.2,
   vax_efficacy                 = 0.97,
-  contact_matrix               = mixing,
+  contact_matrix               = mixing * calib_scale,
   hospitalization_rate         = h_rate,
   hospitalization_period       = 7,
   days_undetected              = 2,
@@ -162,6 +214,10 @@ measles_model |>
   )
 ```
 
+```{r}
+#| label: checking-simulations
+summary(measles_model)
+```
 
 ```{r}
 #| label: extracting-results
@@ -185,36 +241,50 @@ hospitalizations <- ans$hospitalizations |> as.data.table()
 ```{r}
 #| label: plotting-outbreak-size1
 # Aggregating to get the final
-with(
+ggplot2::ggplot(
   outbreak_size,
-  {
-    plot(
-      x = date,
-      y = outbreak_size,
-      col = adjustcolor("blue", alpha.f = .2),
-      pch = 19,
-      ylab = "Cases",
-      xlab = "Day",
-      main = "Measles outbreak size in Short Creek",
-      sub = "Mixing model with age and school data (100 simulations)"
-    )
-})
+  ggplot2::aes(x = date, y = outbreak_size)
+) +
+  ggplot2::geom_point(
+    color = "blue",
+    alpha = 0.2,
+    size = 1.5
+  ) +
+  ggplot2::labs(
+    title = paste("Measles outbreak size in", params$city),
+    subtitle = sprintf(
+      "Mixing model with census data (%i simulations)",
+      params$nsims
+    ),
+    x = "Day",
+    y = "Cases"
+  ) +
+  ggplot2::theme_minimal()
 ```
 
 
 ```{r}
 #| label: plotting-outbreak-size2
 # Aggregating to get the final
-with(
-  outbreak_size[date == max(date)],
-  {
-    hist(
-      outbreak_size,
-      main = "Measles outbreak size in Short Creek",
-      sub = "Mixing model with age and school data (100 simulations)",
-      breaks = 20
-    )
-})
+final_outbreak <- outbreak_size[date == max(date)]
+median_outbreak_size <- median(final_outbreak$outbreak_size)
+
+ggplot2::ggplot(final_outbreak, ggplot2::aes(x = outbreak_size)) +
+  ggplot2::geom_histogram(fill = "steelblue", color = "white") +
+  ggplot2::labs(
+    title = sprintf(
+      "Measles outbreak size in %s (median: %.2f)",
+      params$city,
+      median_outbreak_size
+    ),
+    subtitle = sprintf(
+      "Mixing model with census data (%i simulations)",
+      params$nsims
+    ),
+    x = "Outbreak size",
+    y = "Count"
+  ) +
+  ggplot2::theme_minimal()
 ```
 
 
