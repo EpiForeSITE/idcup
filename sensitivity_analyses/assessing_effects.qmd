@@ -1,0 +1,13 @@
+---
+format: gfm
+bibliography: references.bib
+---
+
+# What are the relevant effects of the World Cup?
+
+The 2026 World Cup will result in a large number of both international and local visitors to the host cities. Current estimates place the number of international visitors at around 742,000 additional visitors [@societyLargestWorldCup2026].
+
+On average, a single international visitor to the World Cup is expected to attend 2 matches and stay for about 14 days [@airbnbFIFAWorldCup2026].
+
+## References
+
