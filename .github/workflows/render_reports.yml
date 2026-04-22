@@ -62,6 +62,7 @@ jobs:
 
   render:
     needs: build-container
+    if: ${{ always() && (github.event_name == 'pull_request' || needs.build-container.result == 'success') }}
     permissions:
       packages: read
     strategy:
