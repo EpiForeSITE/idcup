@@ -19,6 +19,8 @@ data/
 scenarios/
   template.qmd         Parameterized Quarto scenario document
   data/                City-specific data symlinked/copied for rendering
+sensitivity_analyses/
+  scaling_analysis.md  Report on why downscaling works in the model   
 Makefile               Targets for data generation and package updates
 ```
 
