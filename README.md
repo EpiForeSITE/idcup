@@ -14,6 +14,8 @@ Los Angeles, San Francisco, New York City, Boston, Houston, Dallas, Philadelphia
 data/
   census_age.csv       Age-structured population counts by city (generated)
   census_age.R         Script to pull county-level census data via multigroup.vaccine
+  measles_cases.csv    County-level measles case updates mapped to project cities (generated)
+  measles_cases.R      Script to pull measles case updates for project cities
   population.csv       Total city populations (source: census.gov)
   mmr.csv              MMR vaccination estimates by city (source: CDC MMWR 2023-24)
 scenarios/
@@ -70,6 +72,7 @@ quarto render scenarios/template.qmd -P city:"Miami"
 |------|--------|
 | `population.csv` | U.S. Census Bureau |
 | `census_age.csv` | U.S. Census Bureau (2024, county-level, via `multigroup.vaccine`) |
+| `measles_cases.csv` | [CSSEGISandData/measles_data](https://github.com/CSSEGISandData/measles_data) county-level update feed |
 | `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
 
 Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80to84, 85plus.
