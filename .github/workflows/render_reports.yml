@@ -6,9 +6,17 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      max_pop:
+        description: 'Maximum population to include in the simulation (default: 50 thousand)'
+        required: false
+        default: '50000'
 
 permissions:
   contents: read
+
+env:
+  DEFAULT_MAX_POP: 50000
 
 jobs:
   build-container:
@@ -20,7 +28,7 @@ jobs:
       image: ${{ steps.vars.outputs.image }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set image variables
         id: vars
@@ -44,14 +52,14 @@ jobs:
           fi
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push container image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .devcontainer
           file: .devcontainer/Containerfile
@@ -74,13 +82,22 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+      
+      - name: Check cache
+        id: cache
+        uses: actions/cache@v5
+        with:
+          key: ${{ runner.os }}-reports-${{ matrix.city }}-maxpop-${{ github.event.inputs.max_pop || env.DEFAULT_MAX_POP }}-${{ hashFiles( 'scenarios/template.qmd' ) }}
+          path: scenarios/${{ matrix.city }}*
 
       - name: Render reports
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          CITY="${{ matrix.city }}" make scenario -B
+          CITY="${{ matrix.city }}" MAX_POP="${{ github.event.inputs.max_pop || env.DEFAULT_MAX_POP }}" make scenario -B
 
       - name: Upload reports
         uses: actions/upload-artifact@v7
