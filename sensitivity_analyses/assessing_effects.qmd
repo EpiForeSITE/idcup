@@ -7,7 +7,83 @@ bibliography: references.bib
 
 The 2026 World Cup will result in a large number of both international and local visitors to the host cities. Current estimates place the number of international visitors at around 742,000 additional visitors [@societyLargestWorldCup2026].
 
-On average, a single international visitor to the World Cup is expected to attend 2 matches and stay for about 14 days [@airbnbFIFAWorldCup2026].
+On average, a single international visitor to the World Cup is expected to attend 2 matches and stay for about 14 days [@airbnbFIFAWorldCup2026]. Assuming a uniform distribution of the matches across the matches, we should expect to see an influx like the following
+
+```{r}
+#| label: matches
+#| echo: false
+#| warning: false
+library(data.table)
+matches <- fread("data/world_cup_matches.csv")
+matches <- matches[country == "United States", .(date, city)]
+matches <- matches[, .("N matches" = .N), by = city]
+
+matches <- matches[, "Delta (thousands)" := 742 / sum(`N matches`) * `N matches` * 2]
+
+matches <- rbind(
+  matches,
+  data.table(
+    city = "Total",
+    `N matches` = sum(matches$`N matches`),
+    `Delta (thousands)` = sum(matches$`Delta (thousands)`)
+  )
+)
+
+matches |>
+  knitr::kable(
+    digits = 2,
+    caption = paste(
+      "Estimated number of international visitors in each host city.",
+      "The 'Delta' column assumes individuals will not visit the same city for",
+      "multiple matches, and that each visitor will attend 2 matches on average."
+    )
+  )
+```
+
+According to AirBnB [@airbnbFIFAWorldCup2026], the two-night stay is the most common booking, suggesting that many fans will attend a single match within a single city. However, the average stay of 14 days suggests that many fans will attend multiple matches across multiple cities. The actual distribution of match attendance and city visits is likely to be complex and may vary widely among different groups of fans.
+
+If we take the previous table and combine it with the population sizes, we can get a rough estimate of the percentage increase in population for each city during the World Cup:
+
+```{r}
+#| label: population
+#| echo: false
+population <- fread("data/population.csv")
+population <- merge(population, matches)
+population[, "Population increase (%)" := `Delta (thousands)` * 1000 / Population * 100]
+
+# But we need to correct per match
+population[, "Population increase (%) per match" := `Population increase (%)` / `N matches`]
+
+population[, .(city, Population, `N matches`, `Population increase (%)`, `Population increase (%) per match`)] |>
+  knitr::kable(
+    digits = 2,
+    caption = paste(
+      "Estimated percentage increase in population for each host city during the World Cup.",
+      "This is calculated by dividing the estimated number of international visitors (Delta) by the city's population."
+    )
+  )
+```
+
+While the overall influx can be substantial, if we consider the increase on a per-match basis, the percentage increase in population for each city is much smaller. From the epidemiological perspective, the per-match increase is more relevant for understanding the potential impact on disease transmission.
+
+```{r}
+#| label: variance
+#| echo: false
+ans <- population[city == "Miami", .(n = Population, n_post = Population * (1 + `Population increase (%) per match`/100))]
+
+mixmat <- readRDS("data/mixing_matrix.rds")[["Miami"]]
+avg_crate <- rowSums(mixmat) |> mean()
+
+p <- avg_crate / ans$n
+p_post <- avg_crate / ans$n_post
+
+var_baseline <- (ans$n * p * (1 - p)) |> prettyNum()
+var_post <- (ans$n_post * p_post * (1 - p_post)) |> prettyNum()
+```
+
+Within our model, since we are not changing the mixing matrix (people will still mix with the same age groups), the main effect may be reflected in the variance of the contact rates. For example, in the case of Miami, which expects a 3.91% increase in population per match, given an average contact rate of `r avg_crate`, the variance would increase from `r var_baseline` to `r var_post`, which is an increase close to zero. This is also consistent with the fact that for small probabilities, the Binomial distribution can be approximated by a Poisson distribution, where the variance is equal to the mean. 
+
+Therefore, from the perspective of disease transmission, the biggest risk may not be the increase in population size itself, but rather the introduction of infectious individuals from other regions or cities within the US. Using this as a starting point, we will focus our sensitivity analyses on the potential effects of increased importation of cases, rather than the increase in population size.
 
 ## References
 

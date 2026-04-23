@@ -180,5 +180,27 @@ if (!identical(matches$match_number, seq_len(expected_matches))) {
 character_columns <- vapply(matches, is.character, logical(1))
 matches[character_columns] <- lapply(matches[character_columns], normalize_ascii)
 
-utils::write.csv(matches, output_path, row.names = FALSE)
-message(sprintf("Wrote %d matches to %s", nrow(matches), output_path))
+# Adding the city, country, and state
+library(data.table)
+stadiums <- fread("data/stadiums.csv")
+
+# Minor fixes
+stadiums[stadium == "GEHA Field at Arrowhead Stadium", stadium := "Arrowhead Stadium"]
+stadiums[stadium == "Estadio Banorte", stadium := "Estadio Azteca"]
+
+matches2 <- merge(
+  matches, stadiums,
+  by.x = "venue",
+  by.y = "stadium",
+  all = TRUE
+  ) |> as.data.table()
+
+matches2[, source_url := NULL][, city.x := NULL]
+setnames(matches2, c("city.y"), c("city"))
+
+# Final tweak to match expected data in our analysis code
+matches2[city == "New York/New Jersey", city := "New York City"]
+matches2[city == "San Francisco Bay Area", city := "San Francisco"]
+
+utils::write.csv(matches2, output_path, row.names = FALSE)
+message(sprintf("Wrote %d matches to %s", nrow(matches2), output_path))

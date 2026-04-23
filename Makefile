@@ -16,6 +16,9 @@ data/census_age.csv: data/census_age.R
 data/mixing_matrix.rds: data/mixing_matrix.R data/census_age.csv
 	Rscript --verbose data/mixing_matrix.R
 
+data/world_cup_matches.csv: data/world_cup_matches.R
+	Rscript --verbose data/world_cup_matches.R
+
 update-measles:
 	installGithub.r UofUEpiBio/measles@$(MEASLES_TREE)
 
