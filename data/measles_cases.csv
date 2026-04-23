@@ -1,0 +1,121 @@
+city,state,county,location_name,location_id,location_type,date,outcome_type,value
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-01-28,case_imported,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-01-28,case_lab-confirmed,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-01-28,case_unvaccinated,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-03-31,case_lab-confirmed,2
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-03-31,case_local,2
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-03-31,case_unvaccinated,2
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-05-19,case_imported,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-05-19,case_lab-confirmed,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-05-19,case_unvaccinated,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-06,case_lab-confirmed,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-06,case_local,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-06,case_unvaccinated,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-18,case_lab-confirmed,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-18,case_local,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-06-18,case_unvaccinated,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-12,case_lab-confirmed,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-12,case_local,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-12,case_unvaccinated,1
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_lab-confirmed,3
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_local,3
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_unvaccinated,2
+Boston,Massachusetts,Suffolk,"Greater Boston, Massachusetts",25025,county,2026-02-27,case_imported,1
+Boston,Massachusetts,Suffolk,"Greater Boston, Massachusetts",25025,county,2026-02-27,case_lab-confirmed,1
+Dallas,Texas,Dallas,"Dallas, Texas",48113,county,2025-06-24,case_lab-confirmed,1
+Dallas,Texas,Dallas,"Dallas, Texas",48113,county,2025-06-24,case_local,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-01-23,case_imported,2
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-01-23,case_lab-confirmed,2
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-03-20,case_lab-confirmed,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-03-20,case_local,3
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-07-15,case_lab-confirmed,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-07-15,case_local,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-08-07,case_lab-confirmed,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2025-08-07,case_local,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-15,case_lab-confirmed,4
+Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-15,case_local,4
+Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_lab-confirmed,1
+Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_local,1
+Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_unvaccinated,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-03-11,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-03-11,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-04-25,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-04-25,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-05-07,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-05-07,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-06-06,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-06-06,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-06-12,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2025-06-12,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-01-30,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-01-30,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-01-31,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-01-31,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-02,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-02,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-19,case_imported,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-19,case_lab-confirmed,1
+Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2025-03-06,case_lab-confirmed,1
+Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2025-03-06,case_local,1
+Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2026-01-27,case_lab-confirmed,1
+Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2026-01-27,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-01-31,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-01-31,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-01-31,case_unvaccinated,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-02-26,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-02-26,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-02-26,case_unvaccinated,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-03-20,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-03-20,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-05-16,case_lab-confirmed,3
+New York City,New York,New York,"New York City, New York",36061,county,2025-05-16,case_local,3
+New York City,New York,New York,"New York City, New York",36061,county,2025-07-11,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-07-11,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-08-01,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-08-01,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-08-18,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-08-18,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-08,case_lab-confirmed,3
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-08,case_local,3
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-12,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-12,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-19,case_lab-confirmed,2
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-19,case_local,2
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-26,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-09-26,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-10-17,case_lab-confirmed,2
+New York City,New York,New York,"New York City, New York",36061,county,2025-10-17,case_local,2
+New York City,New York,New York,"New York City, New York",36061,county,2025-11-28,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-11-28,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-12-05,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2025-12-05,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2026-02-13,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2026-02-13,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2026-03-12,case_lab-confirmed,2
+New York City,New York,New York,"New York City, New York",36061,county,2026-03-12,case_local,2
+New York City,New York,New York,"New York City, New York",36061,county,2026-03-27,case_lab-confirmed,1
+New York City,New York,New York,"New York City, New York",36061,county,2026-03-27,case_local,1
+Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-03-31,case_imported,1
+Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-03-31,case_lab-confirmed,1
+Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-04-11,case_imported,1
+Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-04-11,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-02-27,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-02-27,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-04-11,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-04-11,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-04-24,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-04-24,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-04-24,case_unvaccinated,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-05-20,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-05-20,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-06-24,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-06-24,case_lab-confirmed,2
+Seattle,Washington,King,"King, Washington",53033,county,2025-06-24,case_local,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-06-24,case_vaccinated,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-10-28,case_imported,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-10-28,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2025-10-28,case_vaccinated,1
+Seattle,Washington,King,"King, Washington",53033,county,2026-04-01,case_lab-confirmed,2
+Seattle,Washington,King,"King, Washington",53033,county,2026-04-01,case_local,2
+Seattle,Washington,King,"King, Washington",53033,county,2026-04-10,case_lab-confirmed,1
+Seattle,Washington,King,"King, Washington",53033,county,2026-04-10,case_local,1

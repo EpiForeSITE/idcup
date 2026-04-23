@@ -5,3 +5,4 @@
 .Rproj
 *.Rout
 *.csv
+!data/measles_cases.csv
