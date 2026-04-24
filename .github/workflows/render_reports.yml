@@ -1,4 +1,5 @@
 name: Render reports
+run-name: Render reports (trigger=${{ github.event_name }}, max_pop=${{ github.event.inputs.max_pop || '50000' }})
 
 on:
   push:
