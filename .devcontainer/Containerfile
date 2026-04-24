@@ -12,6 +12,6 @@ RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.9.35/quar
 RUN install2.r --error data.table quarto socialmixr multigroup.vaccine ggplot2 rvest
 
 # Installing the needed R package
-RUN installGithub.r UofUEpiBio/measles@gvegayon/fast-mixing
+RUN installGithub.r UofUEpiBio/measles
 
 CMD ["bash"]
