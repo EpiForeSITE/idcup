@@ -84,8 +84,8 @@ Here is an alternative visualization of the probability that the outbreak size e
 #| warning: false
 #| message: false
 #| echo: false
-#| fig-width: 6
-#| fig-height: 8
+#| fig-width: 8
+#| fig-height: 10
 cuts <- c(10, 20, 50)
 
 # Computing the probability by outbreak size
@@ -121,23 +121,36 @@ ggplot(ob_by_cut[cut != 100], aes(
     )
   ) +
   labs(
-    title = "Probability of outbreak size exceeding a given cut-off",
+    title = "Probability of outbreak size",
     x = "Outbreak size",
     y = "Probability (of exceeding Outbreak size)",
-    subtitle = "Based on the final outbreak size in the simulations",
+    subtitle = paste0(
+      "Mixing model with census data.\n",
+      sprintf("Case reporting as of %s", cases)
+    ),
+    caption = paste0(
+      sprintf(
+        "Data from %i simulations",
+        length(unique(outbreaks$sim_num))
+      )
+    ),
     color = "Vaccination\nrate",
     size = "Population\n(millions)"
   ) +
   facet_wrap(~ cut, nrow = 3) +
   coord_flip() +
   theme_minimal() +
+  theme(
+    text = element_text(size = 20)
+  ) + 
   # Adding the numbers on top of the bars
   geom_text(
     aes(
-      x = reorder(city, prob), y = prob + .05,
+      x = reorder(city, prob), y = prob + .1,
       label = sprintf("%.1f%%", prob * 100)
-      
-      ), size = 3)
+      ),
+    size = 4
+  )
 ```
 
 You can go over individual city simulations in the `scenarios/` directory:
