@@ -35,9 +35,6 @@ Makefile               Targets for data generation and package updates
 Install the required R packages from GitHub:
 
 ```r
-# Core simulation engine
-remotes::install_github("UofUEpiBio/epiworldR")
-
 # Measles model and helpers
 remotes::install_github("UofUEpiBio/measles")
 
@@ -48,7 +45,6 @@ remotes::install_github("EpiForeSITE/multigroup.vaccine")
 Or use the Makefile targets:
 
 ```bash
-make update-epiworldr
 make update-measles
 ```
 
@@ -76,6 +72,7 @@ quarto render scenarios/template.qmd -P city:"Miami"
 | `census_age.csv` | U.S. Census Bureau (2024, county-level, via `multigroup.vaccine`) |
 | `measles_cases.csv` | [CSSEGISandData/measles_data](https://github.com/CSSEGISandData/measles_data) county-level update feed |
 | `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
+| `worldc_cup_matches.csv` | List of World Cup matches ([Wikipedia](https://en.wikipedia.org/w/index.php?title=2026_FIFA_World_Cup&oldid=1351016947#Match_schedule)) |
 
 Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80to84, 85plus.
 

@@ -1,10 +1,23 @@
+
+
 # idcup
 
-[![Render reports](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml) [![Fetch measles cases](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml)
+[![Render
+reports](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml)
+[![Fetch measles
+cases](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml)
 
-This project provides agent-based measles outbreak simulations across the 11 major U.S. cities hosting the **2026 FIFA World Cup**. With large international crowds expected, understanding the risk of measles transmission is critical for public-health preparedness. The simulations are built on [epiworldR](https://github.com/UofUEpiBio/epiworldR) and the [measles](https://github.com/UofUEpiBio/measles) R package, using census-derived age structure and MMR vaccination coverage.
+This project provides agent-based measles outbreak simulations across
+the 11 major U.S. cities hosting the **2026 FIFA World Cup**. With large
+international crowds expected, understanding the risk of measles
+transmission is critical for public-health preparedness. The simulations
+are built on [epiworldR](https://github.com/UofUEpiBio/epiworldR) and
+the [measles](https://github.com/UofUEpiBio/measles) R package, using
+census-derived age structure and MMR vaccination coverage.
 
-For technical details on the repository layout, data sources, model overview, and getting-started instructions, see [DETAILS.md](./DETAILS.md).
+For technical details on the repository layout, data sources, model
+overview, and getting-started instructions, see
+[DETAILS.md](./DETAILS.md).
 
 # Simulated Measles Outbreaks in US Cities hosting the 2026 FIFA World Cup
 
@@ -17,11 +30,12 @@ For technical details on the repository layout, data sources, model overview, an
 > interpreting the results.
 
 The following figure summarizes the simulated measles outbreak size over
-time for the 11 US cities hosting the 2026 FIFA World Cup. Each line
-represents a single simulation, with the color indicating the
-vaccination rate in that city. The simulations are based on a mixing
-model using census data, and the case reporting is as of the latest
-available date.
+time for the 11 US cities hosting the 2026 FIFA World Cup. **The current
+simulations do not include information about the effect of the World
+Cup, but merely represent baseline scenarios**. Each line represents a
+single simulation, with the color indicating the vaccination rate in
+that city. The simulations are based on a mixing model using census
+data, and the case reporting is as of the latest available date.
 
 ![](README_files/figure-commonmark/plot-1.png)
 
