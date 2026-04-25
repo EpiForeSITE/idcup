@@ -105,6 +105,7 @@ jobs:
         with:
           name: reports-${{ matrix.city }}
           path: scenarios/${{ matrix.city }}*
+          retention-days: 1 # We don't need them for long
   
   combine:
     needs: render

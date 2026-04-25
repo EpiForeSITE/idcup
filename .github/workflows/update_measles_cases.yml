@@ -22,6 +22,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Configure git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Refresh measles cases data
         run: make data/measles_cases.csv -B
 
