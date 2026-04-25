@@ -95,7 +95,8 @@ for (cut in cuts) {
   ob_by_cut <- rbind(
     ob_by_cut,
     ob_final[, .(
-      prob = mean(outbreak_size >= cut), cut = cut
+      prob = mean(outbreak_size >= cut),
+      cut = paste(cut, "+ cases")
       ),
       by = .(city, initial, vacc_rate, Population)
       ]
@@ -103,7 +104,6 @@ for (cut in cuts) {
 }
 
 # Preparing the data for plotting
-ob_by_cut[, cut := factor(cut, levels = cuts)]
 ob_by_cut[, initial := ifelse(initial == 1, "1 initial case", paste(initial, "initial cases"))] 
 
 ob_by_cut[, Population := Population / 1e6]
