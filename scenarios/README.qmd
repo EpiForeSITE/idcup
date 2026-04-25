@@ -36,6 +36,10 @@ outbreaks <- merge(outbreaks, vacc_rates, by = "city", all.x = TRUE)
 
 # Cases
 cases <- fread("data/measles_cases.csv")[, max(date)]
+
+# Population size
+pop <- fread("data/population.csv")
+outbreaks <- merge(outbreaks, pop, by = "city")
 ```
 
 
@@ -50,7 +54,8 @@ ggplot(outbreaks, aes(
   )
   ) +
   geom_line(
-    aes(color = vacc_rate)
+    aes(color = vacc_rate),
+     alpha = 0.25
     # color = adjustcolor("steelblue", alpha.f = 0.25)
   ) +
   labs(
@@ -70,6 +75,69 @@ ggplot(outbreaks, aes(
   ) +
   facet_wrap(~ city) +
   theme_minimal()
+```
+
+Here is an alternative visualization of the probability that the outbreak size exceeds a given cut-off (10, 20, 50 cases) based on the final outbreak size in the simulations. The points are colored by vaccination rate and sized by population size. The numbers on top of the bars indicate the probability in percentage.
+
+```{r}
+#| label: probability
+#| warning: false
+#| message: false
+#| echo: false
+#| fig-width: 6
+#| fig-height: 8
+cuts <- c(10, 20, 50)
+
+# Computing the probability by outbreak size
+ob_by_cut <- NULL
+ob_final <- outbreaks[date == max(date)]
+for (cut in cuts) {
+  ob_by_cut <- rbind(
+    ob_by_cut,
+    ob_final[, .(
+      prob = mean(outbreak_size >= cut), cut = cut
+      ),
+      by = .(city, initial, vacc_rate, Population)
+      ]
+  )
+}
+
+# Preparing the data for plotting
+ob_by_cut[, cut := factor(cut, levels = cuts)]
+ob_by_cut[, initial := ifelse(initial == 1, "1 initial case", paste(initial, "initial cases"))] 
+
+ob_by_cut[, Population := Population / 1e6]
+
+setorder(ob_by_cut, cut, prob)
+
+ggplot(ob_by_cut[cut != 100], aes(
+  x = reorder(city, prob), y = prob, color = vacc_rate)) +
+  # geom_bar(stat = "identity") +
+  geom_point(aes(color = vacc_rate, size = Population)) +
+  geom_segment(
+    aes(
+      y=0, yend = prob, x=reorder(city, prob),
+      xend = reorder(city, prob)
+    )
+  ) +
+  labs(
+    title = "Probability of outbreak size exceeding a given cut-off",
+    x = "Outbreak size",
+    y = "Probability (of exceeding Outbreak size)",
+    subtitle = "Based on the final outbreak size in the simulations",
+    color = "Vaccination\nrate",
+    size = "Population\n(millions)"
+  ) +
+  facet_wrap(~ cut, nrow = 3) +
+  coord_flip() +
+  theme_minimal() +
+  # Adding the numbers on top of the bars
+  geom_text(
+    aes(
+      x = reorder(city, prob), y = prob + .05,
+      label = sprintf("%.1f%%", prob * 100)
+      
+      ), size = 3)
 ```
 
 You can go over individual city simulations in the `scenarios/` directory:

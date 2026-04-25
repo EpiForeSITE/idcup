@@ -19,6 +19,14 @@ available date.
 
 ![](README_files/figure-commonmark/plot-1.png)
 
+Here is an alternative visualization of the probability that the
+outbreak size exceeds a given cut-off (10, 20, 50 cases) based on the
+final outbreak size in the simulations. The points are colored by
+vaccination rate and sized by population size. The numbers on top of the
+bars indicate the probability in percentage.
+
+![](README_files/figure-commonmark/probability-1.png)
+
 You can go over individual city simulations in the `scenarios/`
 directory:
 
