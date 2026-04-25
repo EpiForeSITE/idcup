@@ -54,10 +54,10 @@ across the population. We can now run the simulations.
     Number of entities  : 18
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00m
-    Total elapsed t     : 1.00m (200 runs)
-    Last run speed      : 33.37 million agents x day / second
-    Average run speed   : 58.29 million agents x day / second
+    Last run elapsed t  : 0.00s
+    Total elapsed t     : 95.00s (200 runs)
+    Last run speed      : 35.63 million agents x day / second
+    Average run speed   : 64.97 million agents x day / second
     Rewiring            : off
     Last seed used      : 628712762
 
