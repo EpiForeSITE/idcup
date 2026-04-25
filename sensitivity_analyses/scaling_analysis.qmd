@@ -4,7 +4,7 @@ format: gfm
 
 # Scaling analysis of measles outbreak simulations
 
-While we can simulate outbreaks at the full population size, reducing the scale to something that is computationally more manageable without losing the key dynamics is plaussible. In our models, we are fixing the population size to be approximately 500,000 agents. Things to consider of the model implemented here are:
+While we can simulate outbreaks at the full population size, reducing the scale to something that is computationally more manageable without losing the key dynamics is plaussible. In our models, we are fixing the population size to be approximately 1,000,000 agents. Things to consider of the model implemented here are:
 
 1. **Contact rates**: The population size has no effect on the contact rates in our model. Instead of using mixing matrices, we use contact matrices, so the average number of contacts per person is the same regardless of the population size.
 
@@ -22,7 +22,7 @@ census <- fread("data/census_age.csv")
 population <- fread("data/population.csv")
 
 dat <- merge(census, population, by = "city")
-dat[, scale_factor := min(1,500000 / Population), by = city]
+dat[, scale_factor := min(1,1000000 / Population), by = city]
 dat[, true_size := round(total/sum(total) * Population)]
 dat[, adj_size := round(true_size * scale_factor)]
 dat <- dat[, .(
@@ -36,12 +36,12 @@ dat <- dat[, .(
 setorder(dat, "Adjustment Scale")
 knitr::kable(
   dat,
-  caption = "Adjusted smallest population sizes per group for each city included in the project when scaling down to 500,000 agents.",
+  caption = "Adjusted smallest population sizes per group for each city included in the project when scaling down to 1,000,000 agents.",
   digits = 2
   )
 ```
 
-Of the cities included in the project, the one that is most affected by the scaling is New York. The smallest group goes from 12,370 to 730; a downscaling of about 16 times. Nonetheless, as we present below, in a downscaling of 20 times, with a group that moved from 10,000 to 500, we did not see any significant changes in the outbreak dynamics. This gives us confidence that the scaling down to 500,000 agents is not likely to affect the results of our simulations.
+Of the cities included in the project, the one that is most affected by the scaling is New York. The smallest group goes from 12,370 to 1,459; a downscaling of about 8.4 times. Nonetheless, as we present below, in a downscaling of 20 times, with a group that moved from 10,000 to 500, we did not see any significant changes in the outbreak dynamics. This gives us confidence that the scaling down to 1,000,000 agents is not likely to affect the results of our simulations.
 
 ## Some results from scaling analyses
 

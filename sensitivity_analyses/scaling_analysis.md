@@ -5,7 +5,7 @@
 While we can simulate outbreaks at the full population size, reducing
 the scale to something that is computationally more manageable without
 losing the key dynamics is plaussible. In our models, we are fixing the
-population size to be approximately 500,000 agents. Things to consider
+population size to be approximately 1,000,000 agents. Things to consider
 of the model implemented here are:
 
 1.  **Contact rates**: The population size has no effect on the contact
@@ -25,27 +25,27 @@ population size ranges per group for each city included in the project:
 
 | city          | Population | Adjustment Scale | Min (true) | Min Adjusted |
 |:--------------|:-----------|-----------------:|-----------:|-------------:|
-| New York City | 8,478,072  |             0.06 |      12370 |          730 |
-| Los Angeles   | 3,878,704  |             0.13 |      24480 |         3156 |
-| Houston       | 2,390,125  |             0.21 |       4431 |          927 |
-| Philadelphia  | 1,573,916  |             0.32 |       1422 |          452 |
-| Dallas        | 1,326,087  |             0.38 |       1367 |          515 |
-| San Francisco | 827,526    |             0.60 |        508 |          307 |
-| Seattle       | 780,995    |             0.64 |       1002 |          641 |
-| Boston        | 673,458    |             0.74 |        299 |          222 |
-| Atlanta       | 520,070    |             0.96 |        260 |          250 |
-| Kansas City   | 516,032    |             0.97 |        223 |          216 |
+| New York City | 8,478,072  |             0.12 |      12370 |         1459 |
+| Los Angeles   | 3,878,704  |             0.26 |      24480 |         6311 |
+| Houston       | 2,390,125  |             0.42 |       4431 |         1854 |
+| Philadelphia  | 1,573,916  |             0.64 |       1422 |          903 |
+| Dallas        | 1,326,087  |             0.75 |       1367 |         1031 |
+| Atlanta       | 520,070    |             1.00 |        260 |          260 |
+| Boston        | 673,458    |             1.00 |        299 |          299 |
+| Kansas City   | 516,032    |             1.00 |        223 |          223 |
 | Miami         | 487,014    |             1.00 |       1046 |         1046 |
+| San Francisco | 827,526    |             1.00 |        508 |          508 |
+| Seattle       | 780,995    |             1.00 |       1002 |         1002 |
 
 Adjusted smallest population sizes per group for each city included in
-the project when scaling down to 500,000 agents.
+the project when scaling down to 1,000,000 agents.
 
 Of the cities included in the project, the one that is most affected by
 the scaling is New York. The smallest group goes from 12,370 to 730; a
 downscaling of about 16 times. Nonetheless, as we present below, in a
 downscaling of 20 times, with a group that moved from 10,000 to 500, we
 did not see any significant changes in the outbreak dynamics. This gives
-us confidence that the scaling down to 500,000 agents is not likely to
+us confidence that the scaling down to 1,000,000 agents is not likely to
 affect the results of our simulations.
 
 ## Some results from scaling analyses

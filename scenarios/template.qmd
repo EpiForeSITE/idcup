@@ -1,14 +1,15 @@
 ---
 format: gfm
 params:
-    city: "Miami"
-    max_pop: 1000000
-    nthreads: 2
-    echo: false
-    seed: 8812
-    ndays: 60
-    nsims: 200
+  city: "Miami"
+  max_pop: 100000
+  nthreads: 2
+  echo: false
+  seed: 8812
+  ndays: 60
+  nsims: 200
 ---
+
 
 # Measles outbreak simulation in `r params$city`
 
@@ -46,6 +47,7 @@ knitr::opts_chunk$set(
 
 ```
 
+Pulling informatou about the city and population from the data files. The mixing matrix is based on the POLYMOD survey data, which provides age-based contact patterns for various cities. We will use the mixing matrix corresponding to the specified city in `params$city`. If the city is not found in the available mixing matrices, an error will be raised.
 
 ```{r}
 #| label: loading-data
@@ -76,6 +78,57 @@ vacc_rate <- fread(
   )[city == params$city]$vacc_rate / 100
 ```
 
+Regarding the number of cases, we leverage information from Johns Hopkins University (JHU) [U.S. Measles Data Repository](https://github.com/CSSEGISandData/measles_data). From it, we pull all the reported cases from the corresponding city. Since the data does not include active cases but reported cases, we will estimate what is the expected number of active cases considering the last reported case as the most recent. Thus, all simulations will have at least one active case at the start, and, if more cases have been reported, they will be included in the simulation.
+
+```{r}
+#| label: simulating-active-cases
+reported_cases <- fread("data/measles_cases.csv")[city == params$city]
+reported_cases <- reported_cases[, .(date)]
+
+# Truncated Geometric distribution
+cdf_trunc_geo10 <- \(x) {
+  
+  p10 <- pgeom(10, prob = 1/4)
+  ifelse(x > 10 | x < 0, 1, {
+    pgeom(x, prob = 1/4) / p10
+  })
+  
+}
+
+#' Simulating active cases
+#' @param dates Vector of dates of class `IDateTime()`
+#' @param today Date of class `IDateTime()`, defaulting to the current date.
+#' @param cdf CDF function for the truncated Geometric distribution,
+#' defaulting to `cdf_trunc_geo10`
+#' @return Simulated number of active cases
+ractive_cases <- function(
+  dates,
+  today = max(dates),
+  cdf = cdf_trunc_geo10,
+  min_cases = 1L
+  ) {
+
+  # Day difference
+  days_since <- as.integer(today - dates)
+
+  # Probability of being active cases
+  p <- 1 - cdf(days_since)
+
+  # Simulating active cases
+  max(min_cases, sum(runif(length(p)) < p))
+
+}
+
+# Example (only if interactive)
+if (interactive()) {
+set.seed(133)
+replicate(1000, ractive_cases(reported_cases$date)) |>
+  table()
+}
+
+# With this in hand, we can then create a function (later) for
+# distributing the initial cases using this random sampling approach.
+```
 
 ```{r}
 #| label: checking-size
@@ -128,7 +181,7 @@ calibrate_cm <- function(R0, t_infect) {
 
 }
 
-calib_scale <- calibrate_cm(R0 = 15, t_infect = 0.2)
+calib_scale <- calibrate_cm(R0 = 12, t_infect = 0.2)
 ```
 
 ## Baseline scenario
@@ -177,7 +230,7 @@ add_entities_from_dataframe(
 )
 ```
 
-
+For `r params$city`, the vaccination rate is approximately `r sprintf("%.2f", census_age[, sum(total * vacc_rate)/sum(total)] * 100)`%.
 
 ```{r}
 #| label: setting-distribution
@@ -193,14 +246,31 @@ measles_model |>
   set_distribution_tool(dist_fun)
 ```
 
+For the initial cases, we will use the expected number of active cases based on the reported cases and the sampling approach described above. We will distribute these initial cases randomly across the population.
 
 ```{r}
 #| label: distribute-initial-cases
+# First, we simulate the number of active cases
+# outside of the simulation framework.
+set.seed(3123)
+expected_active_cases <- replicate(
+    n = 1000,
+    expr = ractive_cases(reported_cases$date)
+  ) |>
+  mean() |>
+  ceiling() |>
+  as.integer()
+
 get_virus(measles_model, 0L) |>
   set_distribution_virus(
-    distfun = distribute_virus_randomly(prevalence = 1, as_proportion = FALSE)
+    distfun = distribute_virus_randomly(
+      prevalence = expected_active_cases,
+      as_proportion = FALSE
+      )
   )
 ```
+
+We will use `r expected_active_cases` initial cases in the simulations, distributed randomly across the population. We can now run the simulations.
 
 ```{r}
 #| label: running-simulations
@@ -287,6 +357,13 @@ ggplot2::ggplot(final_outbreak, ggplot2::aes(x = outbreak_size)) +
   ggplot2::theme_minimal()
 ```
 
+We can save the results for further analysis.
+
+```{r}
+#| label: saving-results
+fwrite(outbreak_size, sprintf("%s_outbreak_size.csv", params$city))
+fwrite(hospitalizations, sprintf("%s_hospitalizations.csv", params$city))
+```
 
 ## Session info
 
