@@ -14,7 +14,7 @@ on:
         default: '50000'
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   DEFAULT_MAX_POP: 50000
@@ -110,7 +110,17 @@ jobs:
   combine:
     needs: render
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - name: Checkout code
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v6
+
+      - name: Configure git safe directory
+        if: github.event_name == 'workflow_dispatch'
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Download all reports
         uses: actions/download-artifact@v7
         with:
@@ -119,7 +129,21 @@ jobs:
           merge-multiple: true
 
       - name: Upload as a single file
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/upload-artifact@v7
         with:
           name: all-reports
           path: scenarios/*
+
+      - name: Commit scenario files to repository
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scenarios/
+          if [ -z "$(git status --porcelain -- scenarios/)" ]; then
+            echo "No changes detected in scenarios/"
+            exit 0
+          fi
+          git commit -m "Update scenario reports [skip ci]"
+          git push
