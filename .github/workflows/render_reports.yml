@@ -24,6 +24,7 @@ jobs:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       packages: write
     outputs:
       image: ${{ steps.vars.outputs.image }}
@@ -73,6 +74,7 @@ jobs:
     needs: build-container
     if: ${{ always() && (github.event_name == 'pull_request' || needs.build-container.result == 'success') }}
     permissions:
+      contents: read
       packages: read
     strategy:
       matrix:
@@ -92,7 +94,7 @@ jobs:
         id: cache
         uses: actions/cache@v5
         with:
-          key: ${{ runner.os }}-reports-${{ matrix.city }}-maxpop-${{ github.event.inputs.max_pop || env.DEFAULT_MAX_POP }}-${{ hashFiles( 'scenarios/template.qmd' ) }}
+          key: ${{ runner.os }}-reports-v2-${{ matrix.city }}-maxpop-${{ github.event.inputs.max_pop || env.DEFAULT_MAX_POP }}-${{ hashFiles('.github/workflows/render_reports.yml', '.gitignore', 'Makefile', 'scenarios/template.qmd', 'data/census_age.csv', 'data/measles_cases.csv', 'data/mixing_matrix.rds', 'data/mmr.csv', 'data/population.csv') }}
           path: scenarios/${{ matrix.city }}*
 
       - name: Render reports

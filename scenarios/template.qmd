@@ -368,4 +368,3 @@ fwrite(hospitalizations, sprintf("%s_hospitalizations.csv", params$city))
 ## Session info
 
 This document was generated using the `{measles}` R package version `r packageVersion("measles")` and the `{epiworldR}` package version `r packageVersion("epiworldR")` on `r Sys.Date()`. We used R version `r getRversion()`, running on `r Sys.info()[['sysname']]` with `r Sys.info()[['machine']]` architecture.
-

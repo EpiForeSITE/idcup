@@ -6,3 +6,5 @@
 *.Rout
 *.csv
 !data/measles_cases.csv
+!scenarios/*_outbreak_size.csv
+!scenarios/*_hospitalizations.csv
