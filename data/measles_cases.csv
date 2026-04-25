@@ -99,6 +99,9 @@ Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-03-31,case_lab-confirmed,1
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-04-11,case_imported,1
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-04-11,case_lab-confirmed,1
+San Francisco,California,San Francisco,"San Francisco, California",6075,county,2026-04-15,case_imported,1
+San Francisco,California,San Francisco,"San Francisco, California",6075,county,2026-04-15,case_lab-confirmed,1
+San Francisco,California,San Francisco,"San Francisco, California",6075,county,2026-04-15,case_unvaccinated,1
 Seattle,Washington,King,"King, Washington",53033,county,2025-02-27,case_imported,1
 Seattle,Washington,King,"King, Washington",53033,county,2025-02-27,case_lab-confirmed,1
 Seattle,Washington,King,"King, Washington",53033,county,2025-04-11,case_imported,1
