@@ -1,0 +1,86 @@
+---
+format: gfm
+---
+
+# Simulated Measles Outbreaks in US Cities hosting the 2026 FIFA World Cup
+
+::: {.callout-caution title="Work in progress"}
+This scenario simulation is a work in progress. We are still reviewing the model, assumptions, and paramters. Please be mindful of this when interpreting the results.
+:::
+
+The following figure summarizes the simulated measles outbreak size over time for the 11 US cities hosting the 2026 FIFA World Cup. Each line represents a single simulation, with the color indicating the vaccination rate in that city. The simulations are based on a mixing model using census data, and the case reporting is as of the latest available date.
+
+```{r}
+#| label: setup
+#| echo: false
+#| warning: false
+#| message: false
+library(data.table)
+library(ggplot2)
+
+fns <- list.files("scenarios/", pattern = "outbreak.*\\.csv", full.names = TRUE)
+
+# Reading the datasets in
+outbreaks <- lapply(fns, \(fn) {
+  city <- gsub("scenarios/+([^_]+)_outbreak.+\\.csv", "\\1", fn)
+  fread(fn)[, city := city][, virus := NULL][, virus_id := NULL]
+}) |> rbindlist()
+
+# Computing the seed
+outbreaks[, initial := as.integer(outbreak_size[1]), by = .(city, sim_num)]
+
+# Extracting vaccination rate
+vacc_rates <- fread("data/mmr.csv", comment.char = "#")[, .(city, vacc_rate)]
+
+outbreaks <- merge(outbreaks, vacc_rates, by = "city", all.x = TRUE)
+
+# Cases
+cases <- fread("data/measles_cases.csv")[, max(date)]
+```
+
+
+```{r}
+#| label: plot
+#| echo: false
+#| warning: false
+#| message: false
+ggplot(outbreaks, aes(
+  x = date, y = outbreak_size,
+  group = interaction(city, sim_num)
+  )
+  ) +
+  geom_line(
+    aes(color = vacc_rate)
+    # color = adjustcolor("steelblue", alpha.f = 0.25)
+  ) +
+  labs(
+    title = "Simulated Measles Outbreak size over time",
+    x = "Day",
+    y = "Outbreak size",
+    # color = "Initial\ncases",
+    color = "Vaccination\nrate",
+    subtitle = paste(
+      "Mixing model with census data.",
+      sprintf("Case reporting as of %s", cases)
+    ),
+    caption = paste(
+      "Each line represents a single simulation (60 days).",
+      sprintf("Data from %i simulations", length(unique(outbreaks$sim_num)))
+    )
+  ) +
+  facet_wrap(~ city) +
+  theme_minimal()
+```
+
+You can go over individual city simulations in the `scenarios/` directory:
+
+```{r}
+#| label: list-scenarios
+#| echo: false
+#| results: asis
+fns <- sprintf("scenarios/%s.md", unique(outbreaks$city)) |>
+  sort()
+
+sprintf("- [%s](%s)", gsub("scenarios/([^_]+).md", "\\1", fns), fns) |>
+  cat(sep = "\n")
+```
