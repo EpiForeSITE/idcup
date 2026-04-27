@@ -12,11 +12,9 @@
 
 ## Preparing the environment
 
-Pulling informatou about the city and population from the data files.
+Pulling information about the city and population from the data files.
 The mixing matrix is based on the Epistorm-Mix data, which provides
-age-based contact patterns for various cities. We will use the mixing
-matrix corresponding to the specified city in `params$city`. If the city
-is not found in the available mixing matrices, an error will be raised.
+age-based contact patterns for the US:
 
 Regarding the number of cases, we leverage information from Johns
 Hopkins University (JHU) [U.S. Measles Data
@@ -49,15 +47,15 @@ across the population. We can now run the simulations.
     SIMULATION STUDY
 
     Name of the model   : Measles with Mixing and Quarantine
-    Population size     : 673467
+    Population size     : 673466
     Agents' data        : (none)
-    Number of entities  : 18
+    Number of entities  : 17
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00m
-    Total elapsed t     : 1.00m (200 runs)
-    Last run speed      : 39.22 million agents x day / second
-    Average run speed   : 79.71 million agents x day / second
+    Last run elapsed t  : 0.00s
+    Total elapsed t     : 78.00s (200 runs)
+    Last run speed      : 53.51 million agents x day / second
+    Average run speed   : 102.36 million agents x day / second
     Rewiring            : off
     Last seed used      : 628712762
 
@@ -89,31 +87,31 @@ across the population. We can now run the simulations.
      - Vax efficacy                    : 0.9700
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 673465 -> 673436
-      - ( 1) Latent                  :      2 -> 3
-      - ( 2) Prodromal               :      0 -> 1
-      - ( 3) Rash                    :      0 -> 3
-      - ( 4) Isolated                :      0 -> 2
-      - ( 5) Isolated Recovered      :      0 -> 2
-      - ( 6) Quarantined Latent      :      0 -> 1
-      - ( 7) Quarantined Susceptible :      0 -> 9
-      - ( 8) Quarantined Prodromal   :      0 -> 1
+      - ( 0) Susceptible             : 673464 -> 673460
+      - ( 1) Latent                  :      2 -> 2
+      - ( 2) Prodromal               :      0 -> 0
+      - ( 3) Rash                    :      0 -> 0
+      - ( 4) Isolated                :      0 -> 1
+      - ( 5) Isolated Recovered      :      0 -> 0
+      - ( 6) Quarantined Latent      :      0 -> 0
+      - ( 7) Quarantined Susceptible :      0 -> 0
+      - ( 8) Quarantined Prodromal   :      0 -> 0
       - ( 9) Quarantined Recovered   :      0 -> 0
       - (10) Hospitalized            :      0 -> 0
-      - (11) Recovered               :      0 -> 9
+      - (11) Recovered               :      0 -> 3
 
     Transition Probabilities:
-     - Susceptible              1.00  0.00     -     -     -     -     -  0.00     -     -     -     -
-     - Latent                      -  0.90  0.09     -     -     -  0.01     -     -     -     -     -
-     - Prodromal                   -     -  0.72  0.28     -     -     -     -     -     -     -     -
-     - Rash                        -     -     -  0.19  0.50  0.12     -     -     -     -     -  0.19
-     - Isolated                    -     -     -  0.11  0.56  0.17     -     -     -     -  0.06  0.11
-     - Isolated Recovered          -     -     -     -     -  0.95     -     -     -     -     -  0.05
-     - Quarantined Latent          -     -     -     -     -     -  0.50     -  0.50     -     -     -
-     - Quarantined Susceptible  0.01     -     -     -     -     -     -  0.99     -     -     -     -
-     - Quarantined Prodromal       -     -     -     -  0.25     -     -     -  0.75     -     -     -
+     - Susceptible              1.00  0.00     -     -     -     -     -     -     -     -     -     -
+     - Latent                      -  0.96  0.04     -     -     -     -     -     -     -     -     -
+     - Prodromal                   -     -  0.85  0.15     -     -     -     -     -     -     -     -
+     - Rash                        -     -     -  0.33  0.33     -     -     -     -     -  0.17  0.17
+     - Isolated                    -     -     -  0.17  0.67     -     -     -     -     -     -  0.17
+     - Isolated Recovered          -     -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Latent          -     -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized                -     -     -     -     -     -     -     -     -     -  0.93  0.07
+     - Hospitalized                -     -     -     -     -     -     -     -     -     -  0.86  0.14
      - Recovered                   -     -     -     -     -     -     -     -     -     -     -  1.00
 
 ![](Boston_files/figure-commonmark/plotting-outbreak-size1-1.png)
@@ -125,5 +123,5 @@ We can save the results for further analysis.
 ## Session info
 
 This document was generated using the `{measles}` R package version
-0.3.0.0 and the `{epiworldR}` package version 0.15.0.0 on 2026-04-25. We
+0.3.0.0 and the `{epiworldR}` package version 0.15.0.0 on 2026-04-27. We
 used R version 4.5.3, running on Linux with x86_64 architecture.
