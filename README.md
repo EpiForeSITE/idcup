@@ -1,167 +1,63 @@
+
+
 # idcup
 
-[![Render reports](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml) [![Fetch measles cases](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml)
+[![Render
+reports](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/render_reports.yml)
+[![Fetch measles
+cases](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml/badge.svg)](https://github.com/EpiForeSITE/idcup/actions/workflows/update_measles_cases.yml)
 
-Agent-based measles outbreak simulations across major U.S. cities, built on [epiworldR](https://github.com/UofUEpiBio/epiworldR) and the [measles](https://github.com/UofUEpiBio/measles) R package. Scenarios are parameterized Quarto documents that can be rendered per city using census-derived age structure and MMR vaccination coverage. You can see the latest version of the simulations in the [`scenarios`](./scenarios/README.md) folder
+This project provides agent-based measles outbreak simulations across
+the 11 major U.S. cities hosting the **2026 FIFA World Cup**. With large
+international crowds expected, understanding the risk of measles
+transmission is critical for public-health preparedness. The simulations
+are built on [epiworldR](https://github.com/UofUEpiBio/epiworldR) and
+the [measles](https://github.com/UofUEpiBio/measles) R package, using
+census-derived age structure and MMR vaccination coverage.
 
-## Cities covered
+For technical details on the repository layout, data sources, model
+overview, and getting-started instructions, see
+[DETAILS.md](./DETAILS.md).
 
-Los Angeles, San Francisco, New York City, Boston, Houston, Dallas, Philadelphia, Atlanta, Seattle, Miami, Kansas City.
+# Simulated Measles Outbreaks in US Cities hosting the 2026 FIFA World Cup
 
-## Repository layout
+> [!CAUTION]
+>
+> ### Work in progress
+>
+> This scenario simulation is a work in progress. We are still reviewing
+> the model, assumptions, and parameters. Please be mindful of this when
+> interpreting the results.
 
-```
-data/
-  census_age.csv       Age-structured population counts by city (generated)
-  census_age.R         Script to pull county-level census data via multigroup.vaccine
-  measles_cases.csv    County-level measles case updates mapped to project cities (generated)
-  measles_cases.R      Script to pull measles case updates for project cities
-  population.csv       Total city populations (source: census.gov)
-  mmr.csv              MMR vaccination estimates by city (source: CDC MMWR 2023-24)
-scenarios/
-  template.qmd         Parameterized Quarto scenario document
-  data/                City-specific data symlinked/copied for rendering
-sensitivity_analyses/
-  scaling_analysis.md  Report on why downscaling works in the model   
-Makefile               Targets for data generation and package updates
-```
+The following figure summarizes the simulated measles outbreak size over
+time for the 11 US cities hosting the 2026 FIFA World Cup. **The current
+simulations do not include information about the effect of the World
+Cup, but merely represent baseline scenarios**. Each line represents a
+single simulation, with the color indicating the vaccination rate in
+that city. The simulations are based on a mixing model using census
+data, and the case reporting is as of the latest available date.
 
-## Getting started
+![](README_files/figure-commonmark/plot-1.png)
 
-### Prerequisites
+Here is an alternative visualization of the probability that the
+outbreak size exceeds a given cut-off (10, 20, 50 cases) based on the
+final outbreak size in the simulations. The points are colored by
+vaccination rate and sized by population size. The numbers on top of the
+bars indicate the probability in percentage.
 
-Install the required R packages from GitHub:
+![](README_files/figure-commonmark/probability-1.png)
 
-```r
-# Core simulation engine
-remotes::install_github("UofUEpiBio/epiworldR")
+You can go over individual city simulations in the `scenarios/`
+directory:
 
-# Measles model and helpers
-remotes::install_github("UofUEpiBio/measles")
-
-# Census data utilities (used by census_age.R)
-remotes::install_github("EpiForeSITE/multigroup.vaccine")
-```
-
-Or use the Makefile targets:
-
-```bash
-make update-epiworldr
-make update-measles
-```
-
-### Regenerate census age data
-
-```bash
-make data/census_age.csv
-```
-
-This calls `data/census_age.R`, which queries 2024 county-level census data for each city and writes `data/census_age.csv`.
-
-### Run a scenario
-
-Render the template for a specific city:
-
-```bash
-quarto render scenarios/template.qmd -P city:"Miami"
-```
-
-## Data sources
-
-| File | Source |
-|------|--------|
-| `population.csv` | U.S. Census Bureau |
-| `census_age.csv` | U.S. Census Bureau (2024, county-level, via `multigroup.vaccine`) |
-| `measles_cases.csv` | [CSSEGISandData/measles_data](https://github.com/CSSEGISandData/measles_data) county-level update feed |
-| `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
-
-Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80to84, 85plus.
-
-## Model overview
-
-Each scenario runs an age-structured Agent-Based Model (ABM) of Measles with mixing populations. The model's main components are:
-
-- Agents are organized based on age groups with their size informed by the US Census.
-- Contact rates are based on the Polymod data and scaled using US Census.
-- Agent's with Rash can be detected and trigger a quarantine process based on contact tracing.
-
-Because the model uses a contact matrix, agents have heterogenous contact rates across groups.
-
-### Transition dynamics
-
-```mermaid
-flowchart TB
-
-    %% Disease progression states
-    subgraph Main[Disease Progression]
-        direction TB
-        S[Susceptible]
-        E[Latent]
-        P[Prodromal]
-        Ra[Rash]
-        Re[Recovered]
-        H[Hospitalized]
-    end
-
-    S --> E
-    E --> P
-    P --> Ra
-    Ra --> Re
-    
-    Ra --> H
-    H --> Re
-
-    %% Quarantine states
-    Qe[Quarantined<br>Latent]
-    Qs[Quarantined<br>Susceptible]
-    Qp[Quarantined<br>Prodromal]
-    I[Isolated]
-    Ir[Isolated<br>Recovered]
-
-    %% Prodromal updates
-    P <==> Qp
-
-    %% Rash updates
-    Ra <==> I
-    Ra --> Ir
-    Ra --> H
-
-    %% Isolation process
-    I --> Re
-    I --> Ir
-    I --> H
-
-    %% Isolation recoveries
-    Ir --> Re
-
-    %% Quarantine process
-    S <==> Qs
-
-    %% Quarantine Latent
-    Qe --> Qp
-    Qe --> P
-    E <==> Qe
-
-    Qp --> I
-    Qp --> Ra
-```
-
-### Quarantine Process
-
-```mermaid
-flowchart LR
-    Start((Start)) --> infected{"Already<br>quarantined<br>or isolated?"}
-    infected -->|Yes|End((End))
-    infected -->|No|Rash{"Rash?"}
-    Rash -->|Yes|Isolate((Isolate))
-    Rash -->|No|vax
-    vax{"Vaccinated?"}
-    vax -->|Yes|End
-    vax -->|No|WillQuarantine
-    WillQuarantine{"Willing to<br>Quarantine?"} -->|No|End
-    WillQuarantine -->|Yes|Quarantine((Quarantine))
-```
-
-### Implementation
-
-We are using the [`{measles}`](https://github.com/UofUEpiBio/measles) R package, which runs on the C++ [`epiworld`](https://github.com/UofUEpiBio/epiworld) library.
+- [Atlanta](scenarios/Atlanta.md)
+- [Boston](scenarios/Boston.md)
+- [Dallas](scenarios/Dallas.md)
+- [Houston](scenarios/Houston.md)
+- [Kansas City](scenarios/Kansas%20City.md)
+- [Los Angeles](scenarios/Los%20Angeles.md)
+- [Miami](scenarios/Miami.md)
+- [New York City](scenarios/New%20York%20City.md)
+- [Philadelphia](scenarios/Philadelphia.md)
+- [San Francisco](scenarios/San%20Francisco.md)
+- [Seattle](scenarios/Seattle.md)
