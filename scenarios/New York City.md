@@ -13,7 +13,7 @@
 ## Preparing the environment
 
 Pulling informatou about the city and population from the data files.
-The mixing matrix is based on the POLYMOD survey data, which provides
+The mixing matrix is based on the Epistorm-Mix data, which provides
 age-based contact patterns for various cities. We will use the mixing
 matrix corresponding to the specified city in `params$city`. If the city
 is not found in the available mixing matrices, an error will be raised.
