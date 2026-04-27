@@ -15,8 +15,7 @@
 "Los Angeles","65to69",510131
 "Los Angeles","70to74",400846
 "Los Angeles","75to79",294190
-"Los Angeles","80to84",185245
-"Los Angeles","85plus",184762
+"Los Angeles","80plus",370007
 "San Francisco","0to4",32604
 "San Francisco","5to9",30652
 "San Francisco","10to14",29977
@@ -33,8 +32,7 @@
 "San Francisco","65to69",43688
 "San Francisco","70to74",39174
 "San Francisco","75to79",30107
-"San Francisco","80to84",17980
-"San Francisco","85plus",21800
+"San Francisco","80plus",39780
 "New York City","0to4",63199
 "New York City","5to9",59980
 "New York City","10to14",60524
@@ -51,8 +49,7 @@
 "New York City","65to69",84842
 "New York City","70to74",75813
 "New York City","75to79",62968
-"New York City","80to84",42711
-"New York City","85plus",43345
+"New York City","80plus",86056
 "Boston","0to4",37980
 "Boston","5to9",33337
 "Boston","10to14",32461
@@ -69,8 +66,7 @@
 "Boston","65to69",35685
 "Boston","70to74",28211
 "Boston","75to79",20435
-"Boston","80to84",12987
-"Boston","85plus",13025
+"Boston","80plus",26012
 "Houston","0to4",335732
 "Houston","5to9",353768
 "Houston","10to14",357102
@@ -87,8 +83,7 @@
 "Houston","65to69",216664
 "Houston","70to74",165188
 "Houston","75to79",114016
-"Houston","80to84",65577
-"Houston","85plus",54272
+"Houston","80plus",119849
 "Dallas","0to4",179439
 "Dallas","5to9",178102
 "Dallas","10to14",178187
@@ -105,8 +100,7 @@
 "Dallas","65to69",115786
 "Dallas","70to74",87081
 "Dallas","75to79",61064
-"Dallas","80to84",35755
-"Dallas","85plus",30168
+"Dallas","80plus",65923
 "Philadelphia","0to4",91327
 "Philadelphia","5to9",91067
 "Philadelphia","10to14",90647
@@ -123,8 +117,7 @@
 "Philadelphia","65to69",80271
 "Philadelphia","70to74",63309
 "Philadelphia","75to79",45241
-"Philadelphia","80to84",27211
-"Philadelphia","85plus",26457
+"Philadelphia","80plus",53668
 "Atlanta","0to4",57690
 "Atlanta","5to9",59710
 "Atlanta","10to14",63500
@@ -141,8 +134,7 @@
 "Atlanta","65to69",48560
 "Atlanta","70to74",38011
 "Atlanta","75to79",29026
-"Atlanta","80to84",16539
-"Atlanta","85plus",14661
+"Atlanta","80plus",31200
 "Seattle","0to4",117390
 "Seattle","5to9",122428
 "Seattle","10to14",123840
@@ -159,8 +151,7 @@
 "Seattle","65to69",109374
 "Seattle","70to74",88479
 "Seattle","75to79",66104
-"Seattle","80to84",39346
-"Seattle","85plus",37569
+"Seattle","80plus",76915
 "Miami","0to4",151686
 "Miami","5to9",155691
 "Miami","10to14",152243
@@ -177,8 +168,7 @@
 "Miami","65to69",145802
 "Miami","70to74",121687
 "Miami","75to79",92835
-"Miami","80to84",65099
-"Miami","85plus",62858
+"Miami","80plus",127957
 "Kansas City","0to4",43888
 "Kansas City","5to9",46102
 "Kansas City","10to14",46969
@@ -195,5 +185,4 @@
 "Kansas City","65to69",39760
 "Kansas City","70to74",31683
 "Kansas City","75to79",22791
-"Kansas City","80to84",13998
-"Kansas City","85plus",12647
+"Kansas City","80plus",26645

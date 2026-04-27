@@ -30,7 +30,7 @@ city_info <- data.frame(
 city_info <- city_info[city_info$city %in% population$city, ]
 
 # Standard 5-year age groups used in epidemiological modeling
-age_groups <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85)
+age_groups <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80)
 
 # Retrieve census age distribution for each city
 census_age <- do.call(rbind, lapply(seq_len(nrow(city_info)), function(i) {

@@ -83,6 +83,7 @@ quarto render scenarios/template.qmd -P city:"Miami"
 | `measles_cases.csv` | [CSSEGISandData/measles_data](https://github.com/CSSEGISandData/measles_data) county-level update feed |
 | `mmr.csv` | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm) |
 | `world_cup_matches.csv` | List of World Cup matches ([Wikipedia](https://en.wikipedia.org/w/index.php?title=2026_FIFA_World_Cup&oldid=1351016947#Match_schedule)); generated via `data/world_cup_matches.R` |
+| `mixing_matrix.rds` | US-based mixing data from [EpiStorm-Mix](https://www.epistorm.org/data/epistorm-mix) |
 
 Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80to84, 85plus.
 
@@ -91,7 +92,7 @@ Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35t
 Each scenario runs an age-structured Agent-Based Model (ABM) of Measles with mixing populations. The model's main components are:
 
 - Agents are organized based on age groups with their size informed by the US Census.
-- Contact rates are based on the Polymod data and scaled using US Census.
+- Contact rates are based on the Epistorm-Mix data and scaled using US Census.
 - Agents with Rash can be detected and trigger a quarantine process based on contact tracing.
 
 Because the model uses a contact matrix, agents have heterogeneous contact rates across groups.

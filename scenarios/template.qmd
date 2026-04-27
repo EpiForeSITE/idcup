@@ -47,7 +47,7 @@ knitr::opts_chunk$set(
 
 ```
 
-Pulling informatou about the city and population from the data files. The mixing matrix is based on the POLYMOD survey data, which provides age-based contact patterns for various cities. We will use the mixing matrix corresponding to the specified city in `params$city`. If the city is not found in the available mixing matrices, an error will be raised.
+Pulling information about the city and population from the data files. The mixing matrix is based on the Epistorm-Mix data, which provides age-based contact patterns for various cities. We will use the mixing matrix corresponding to the specified city in `params$city`. If the city is not found in the available mixing matrices, an error will be raised.
 
 ```{r}
 #| label: loading-data
@@ -55,21 +55,8 @@ Pulling informatou about the city and population from the data files. The mixing
 census_age <- fread("data/census_age.csv")[city == params$city]
 population <- fread("data/population.csv")[city == params$city]
 
-# Mixing matrix (age-based, from POLYMOD survey data)
-mixing_matrices <- readRDS("data/mixing_matrix.rds")
-available_cities <- names(mixing_matrices)
-
-if (!(params$city %in% available_cities)) {
-  stop(
-    sprintf(
-      "Unknown city '%s' in params$city. Available cities in data/mixing_matrix.rds: %s",
-      params$city,
-      paste(available_cities, collapse = ", ")
-    )
-  )
-}
-
-mixing <- mixing_matrices[[params$city]]
+# Mixing matrix (age-based, from Epistorm-Mix data)
+mixing <- readRDS("data/mixing_matrix.rds")
 
 # Retrieving vaccination rate
 vacc_rate <- fread(
@@ -157,31 +144,12 @@ N <- sum(census_age$total)
 
 ```{r}
 #| label: calibrating-mixing
-calibrate_cm <- function(R0, t_infect) {
-
-  zeros <- rep(0, length(census_age$total))
-
-  obj <- \(s) {
-    r_eff <- multigroup.vaccine::vaxrepnum(
-      meaninf = 4,
-      popsize = census_age$total,
-      trmat = mixing * s * t_infect,
-      initR = zeros,
-      initV = zeros,
-      vaxeff = 0
-    )
-
-    (r_eff - R0)^2
-  }
-
-  stats::optimize(
-    f = obj,
-    interval = c(0, 1000)
-  )$minimum
-
-}
-
-calib_scale <- calibrate_cm(R0 = 12, t_infect = 0.2)
+calib_scale <- calibrate_mixing_model(
+  target_rep_number = 12,
+  transmission_prob = 0.2,
+  infectious_period_days = 4,
+  contact_matrix = mixing
+)
 ```
 
 ## Baseline scenario
