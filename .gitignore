@@ -9,3 +9,5 @@
 !scenarios/*_outbreak_size.csv
 !scenarios/*_hospitalizations.csv
 .DS_Store
+scenarios/template.md
+scenarios/template_files/

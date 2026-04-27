@@ -1,4 +1,3 @@
-library(socialmixr)
 library(data.table)
 
 # Read census age data

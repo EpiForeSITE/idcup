@@ -85,7 +85,7 @@ quarto render scenarios/template.qmd -P city:"Miami"
 | `world_cup_matches.csv` | List of World Cup matches ([Wikipedia](https://en.wikipedia.org/w/index.php?title=2026_FIFA_World_Cup&oldid=1351016947#Match_schedule)); generated via `data/world_cup_matches.R` |
 | `mixing_matrix.rds` | US-based mixing data from [EpiStorm-Mix](https://www.epistorm.org/data/epistorm-mix) |
 
-Relevant age groups: are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80to84, 85plus.
+Relevant age groups are 0to4, 5to9, 10to14, 15to19, 20to24, 25to29, 30to34, 35to39, 40to44, 45to49, 50to54, 55to59, 60to64, 65to69, 70to74, 75to79, 80plus.
 
 ## Model overview
 
