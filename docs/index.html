@@ -76,7 +76,7 @@
       color: var(--text);
     }
     .logo svg { flex-shrink: 0; }
-    .logo-text { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; }
+    .logo-text { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; white-space: nowrap; }
     .logo-sub  { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
 
     /* ── Light mode overrides ────────────────────────────────── */
@@ -93,8 +93,6 @@
     [data-theme="light"] #map { background: #e8edf2; }
     [data-theme="light"] .leaflet-tile { filter: none; }
     [data-theme="light"] header { background: rgba(246, 248, 250, 0.92); }
-    [data-theme="light"] .map-overlay-title { background: rgba(246, 248, 250, 0.92); }
-    [data-theme="light"] .map-legend        { background: rgba(246, 248, 250, 0.92); }
     [data-theme="light"] .leaflet-popup-content-wrapper {
       background: #ffffff;
       color: #1f2328;
@@ -131,11 +129,25 @@
     }
     nav a:hover { color: var(--text); }
 
+    /* ── Map subtitle bar (Tufte: keep title outside the data area) ── */
+    #map-subtitle {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.3rem 2rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      line-height: 1.5;
+    }
+    #map-subtitle strong { color: var(--text); font-weight: 600; font-size: 0.85rem; }
+    #map-subtitle span   { color: var(--muted); font-size: 0.75rem; }
+
     /* ── Hero / Map section ─────────────────────────────────────── */
     #map-section {
       position: relative;
-      height: calc(100vh - 57px);
-      min-height: 520px;
+      height: calc(100vh - 57px - 32px);
+      min-height: 480px;
     }
 
     #map {
@@ -150,6 +162,28 @@
     /* Map gesture overlay (injected by JS) */
     #map-gesture-overlay { font-family: 'Inter', sans-serif; }
 
+    /* Recenter button (sits below zoom +/- controls) */
+    .leaflet-recenter-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--surface, #fff);
+      color: var(--text, #333);
+      border: 2px solid rgba(0,0,0,0.2);
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 4px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .leaflet-recenter-btn:hover {
+      background: var(--surface2, #f4f4f4);
+      color: var(--accent, #0969da);
+      border-color: var(--accent, #0969da);
+    }
+
     /* Leaflet popup – dark theme */
     .leaflet-popup-content-wrapper {
       background: #1f2937;
@@ -161,82 +195,106 @@
     .leaflet-popup-close-button { color: #8b949e !important; }
     .leaflet-popup-close-button:hover { color: #e6edf3 !important; }
 
-    .map-overlay-title {
-      position: absolute;
-      top: 1.5rem;
-      left: 1.5rem;
-      z-index: 800;
-      background: rgba(13, 17, 23, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      max-width: 360px;
-    }
-    .map-overlay-title h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 0.25rem;
-    }
-    .map-overlay-title p {
+    /* ── City name tooltip ── */
+    .city-tooltip {
+      background: rgba(13, 17, 23, 0.88);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      color: #e6edf3;
+      font-family: 'Inter', sans-serif;
       font-size: 0.78rem;
-      color: var(--muted);
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .city-tooltip::before { display: none; }
+    [data-theme="light"] .city-tooltip {
+      background: rgba(246, 248, 250, 0.95);
+      border-color: rgba(0,0,0,0.12);
+      color: #24292f;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
-    /* Legend */
+    /* ── Compact horizontal legend (Few 2009: legend outside / minimal) */
     .map-legend {
       position: absolute;
-      bottom: 2rem;
-      right: 1.5rem;
+      top: 1rem;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
       z-index: 800;
       background: rgba(13, 17, 23, 0.88);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 0.9rem 1.1rem;
-      min-width: 190px;
+      padding: 0.45rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      white-space: nowrap;
     }
-    .map-legend h4 {
-      font-size: 0.72rem;
+    [data-theme="light"] .map-legend { background: rgba(246, 248, 250, 0.93); }
+    .leg-sep { width: 1px; height: 40px; background: var(--border); }
+    .leg-section { display: flex; flex-direction: column; gap: 0.2rem; }
+    .leg-title {
+      font-size: 0.63rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.07em;
       color: var(--muted);
-      margin-bottom: 0.6rem;
     }
-    .legend-row {
+    .leg-bubbles {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.45rem;
-      font-size: 0.78rem;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--text);
     }
-    .legend-circle {
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.3);
-      flex-shrink: 0;
-    }
-    .legend-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0.6rem 0;
-    }
-    .legend-color-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.35rem;
-      font-size: 0.78rem;
-    }
-    .legend-swatch {
-      width: 14px;
-      height: 14px;
+    /* ColorBrewer RdYlBu 4-class gradient — diverging around 95 % HIT */
+    .leg-grad-bar {
+      height: 10px;
+      width: 130px;
       border-radius: 3px;
-      flex-shrink: 0;
+      background: linear-gradient(to right, #d7191c, #fdae61, #abd9e9, #2c7bb6);
+    }
+    .leg-grad-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.63rem;
+      color: var(--muted);
     }
 
-    /* ── Content sections ───────────────────────────────────────── */
+    /* ── Scroll-down affordance (Norman 1988; NNG fold-awareness studies) ── */
+    @keyframes bounce-down {
+      0%, 100% { transform: translateY(0);   opacity: 0.7; }
+      50%       { transform: translateY(8px); opacity: 1;   }
+    }
+    #scroll-hint {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 810;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      pointer-events: none;
+      animation: bounce-down 1.8s ease-in-out infinite;
+      transition: opacity 0.5s;
+    }
+    #scroll-hint span {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      opacity: 0.85;
+    }
+    #scroll-hint svg { opacity: 0.85; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.45)); }
+    #scroll-hint.hidden { opacity: 0; pointer-events: none; }
     .section {
       max-width: 900px;
       margin: 0 auto;
@@ -414,18 +472,7 @@
 <!-- ── Header ─────────────────────────────────────────────────── -->
 <header>
   <a href="#" class="logo">
-    <!-- Soccer ball icon -->
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <circle cx="14" cy="14" r="13" stroke="#58a6ff" stroke-width="1.5"/>
-      <polygon points="14,6 18,10 16,15 12,15 10,10" fill="#58a6ff" opacity="0.8"/>
-      <polygon points="14,6 10,4 6,8 8,13 10,10" fill="#58a6ff" opacity="0.4"/>
-      <polygon points="14,6 18,4 22,8 20,13 18,10" fill="#58a6ff" opacity="0.4"/>
-      <polygon points="10,10 8,13 11,18 14,18 16,18 19,13 18,10 16,15 12,15" fill="#58a6ff" opacity="0.2"/>
-    </svg>
-    <div>
-      <div class="logo-text">idcup</div>
-      <div class="logo-sub">Measles Risk &amp; FIFA 2026</div>
-    </div>
+    <div class="logo-text">Measles Risk &amp; FIFA 2026</div>
   </a>
   <nav>
     <a href="#about">About</a>
@@ -454,46 +501,45 @@
   </nav>
 </header>
 
+<!-- ── Map subtitle ──────────────────────────────────────────── -->
+<div id="map-subtitle">
+  <span>Circle size = P(&ge;10 cases, 60-day sim). Color = MMR vaccination rate. Click a city for details.</span>
+</div>
+
 <!-- ── Map ────────────────────────────────────────────────────── -->
 <section id="map-section">
   <div id="map"></div>
 
-  <div class="map-overlay-title">
-    <h1>Measles Outbreak Risk<br/>at 2026 FIFA World Cup Host Cities</h1>
-    <p>Circle size = probability of a large outbreak (&ge;10 cases, 60-day baseline simulation). Click a city for details.</p>
+  <div class="map-legend">
+    <div class="leg-section">
+      <span class="leg-title">Size &rarr; P(&ge;10 cases)</span>
+      <div class="leg-bubbles">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" fill="#8b949e" fill-opacity="0.82" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/></svg>
+        <span>10%</span>
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="#8b949e" fill-opacity="0.82" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/></svg>
+        <span>70%</span>
+      </div>
+    </div>
+    <div class="leg-sep"></div>
+    <div class="leg-section">
+      <span class="leg-title">Color &rarr; MMR vacc. rate</span>
+      <div class="leg-grad-bar"></div>
+      <div class="leg-grad-labels">
+        <span>&lt;90%</span><span>95%&#x2605;</span><span>&ge;96%</span>
+      </div>
+    </div>
   </div>
 
-  <div class="map-legend">
-    <h4>Circle size &rarr; Prob(&ge;10 cases)</h4>
-    <div class="legend-row">
-      <div class="legend-circle" style="width:7px;height:7px;background:#E69F00;opacity:0.85;"></div>
-      <span>10 % probability</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-circle" style="width:11px;height:11px;background:#E69F00;opacity:0.85;"></div>
-      <span>40 % probability</span>
-    </div>
-    <div class="legend-row">
-      <div class="legend-circle" style="width:17px;height:17px;background:#E69F00;opacity:0.85;"></div>
-      <span>70 % probability</span>
-    </div>
-    <hr class="legend-divider"/>
-    <h4 style="margin-top:0.1rem;">Color &rarr; Vacc. rate</h4>
-    <div class="legend-color-row">
-      <div class="legend-swatch" style="background:#56B4E9;"></div>
-      <span>&ge; 95 % vaccinated</span>
-    </div>
-    <div class="legend-color-row">
-      <div class="legend-swatch" style="background:#E69F00;"></div>
-      <span>90 – 95 % vaccinated</span>
-    </div>
-    <div class="legend-color-row">
-      <div class="legend-swatch" style="background:#D55E00;"></div>
-      <span>&lt; 90 % vaccinated</span>
-    </div>
+  <!-- Scroll-down affordance: auto-hides on first scroll -->
+  <div id="scroll-hint" aria-hidden="true">
+    <span>scroll</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.5"
+         stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
   </div>
 </section>
-
 <!-- ── About ──────────────────────────────────────────────────── -->
 <hr class="section-divider" />
 <section id="about" class="section">
@@ -647,11 +693,15 @@
 /* CITIES is defined in data.js – auto-generated by docs/generate_data.py
    from scenarios/*_outbreak_size.csv, data/mmr.csv, data/population.csv */
 
-/* ── Colour-blind-safe fill by vaccination rate ─────────────── */
+/* ── Colour fill by vaccination rate ────────────────────────── */
+/* ColorBrewer RdYlBu 4-class diverging scale (Brewer 1994).
+   Centred at the ~95 % measles herd-immunity threshold (R₀ ≈12–18).
+   Red = low coverage / higher risk; Blue = high coverage / lower risk. */
 function vaccColor(vacc) {
-  if (vacc >= 95) return '#56B4E9';   // sky blue  (high coverage → lower risk)
-  if (vacc >= 90) return '#E69F00';   // orange
-  return '#D55E00';                   // vermilion (low coverage → higher risk)
+  if (vacc >= 95)   return '#2c7bb6';   // blue   — at/above herd immunity
+  if (vacc >= 92)   return '#abd9e9';   // lt blue — approaching threshold
+  if (vacc >= 90)   return '#fdae61';   // orange  — below threshold
+  return             '#d7191c';         // red     — well below threshold
 }
 
 /* ── Radius scaled by prob_10 (min 6 px, max 35 px total) ────── */
@@ -661,13 +711,17 @@ function probRadius(p) { return MIN_RADIUS + p * RADIUS_SCALE; }
 
 /* ── Leaflet map ─────────────────────────────────────────────── */
 const map = L.map('map', {
-  center: [38.5, -97],
-  zoom: 4,
   zoomControl: true,
   attributionControl: true,
   scrollWheelZoom: false,   // enabled only when Ctrl is held
   dragging: !L.Browser.mobile
 });
+
+/* Fit bounds to all cities — works correctly on any screen size */
+const cityBounds = L.latLngBounds(CITIES.map(c => [c.lat, c.lng]));
+function fitAll() {
+  map.fitBounds(cityBounds, { padding: [40, 40] });
+}
 
 /* Gesture handling: Ctrl+scroll to zoom, two-finger on touch */
 (function gestureHandling() {
@@ -727,10 +781,79 @@ const map = L.map('map', {
   }
 })();
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  maxZoom: 18
-}).addTo(map);
+/* Two basemaps (Imhof: basemap must recede behind data)
+   Dark  → OSM + CSS desaturation filter (already in stylesheet)
+   Light → CartoDB Positron: neutral grey land/sea, no hue clash with RdYlBu */
+const TILES = {
+  dark: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }),
+  light: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  })
+};
+
+// Add the correct tile layer for the initial theme
+(function () {
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  TILES[t].addTo(map);
+  fitAll();
+})();
+
+/* ── Recenter control (Leaflet custom control) ─────────────────────── */
+const RecenterControl = L.Control.extend({
+  options: { position: 'topleft' },
+  onAdd: function () {
+    const btn = L.DomUtil.create('button', 'leaflet-recenter-btn');
+    btn.title = 'Re-center map';
+    btn.setAttribute('aria-label', 'Re-center map');
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <line x1="12" y1="2" x2="12" y2="6"/>
+      <line x1="12" y1="18" x2="12" y2="22"/>
+      <line x1="2" y1="12" x2="6" y2="12"/>
+      <line x1="18" y1="12" x2="22" y2="12"/>
+    </svg>`;
+    L.DomEvent.on(btn, 'click', function (e) {
+      L.DomEvent.stopPropagation(e);
+      fitAll();
+    });
+    return btn;
+  }
+});
+new RecenterControl().addTo(map);
+
+/* ── Theme-aware popup (WCAG 2.1: ≥4.5:1 contrast in both modes) ── */
+function buildPopupHtml(city, color) {
+  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const tc = dark ? '#e6edf3' : '#1f2328';   // text colour
+  const mc = dark ? '#8b949e' : '#57606a';   // muted label
+  const hr = dark ? '#30363d' : '#d0d7de';   // divider
+  const pct = v => (v * 100).toFixed(1) + '%';
+  return `
+    <div style="font-family:'Inter',sans-serif;min-width:210px;font-size:13px;">
+      <strong style="font-size:15px;color:${tc}">${city.name}</strong>
+      <hr style="margin:6px 0;border-color:${hr};"/>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="color:${mc};padding:2px 0">MMR coverage</td>
+            <td style="text-align:right;font-weight:600;color:${tc}">${city.vacc}%</td></tr>
+        <tr><td style="color:${mc};padding:2px 0">Population</td>
+            <td style="text-align:right;font-weight:600;color:${tc}">${city.pop.toLocaleString()}</td></tr>
+        <tr><td colspan="2" style="padding-top:6px;color:${mc};font-size:11px;text-transform:uppercase;letter-spacing:.05em">Outbreak probability</td></tr>
+        <tr><td style="padding:2px 0;color:${tc}">≥ 10 cases</td>
+            <td style="text-align:right;font-weight:600;color:${color}">${pct(city.prob_10)}</td></tr>
+        <tr><td style="padding:2px 0;color:${tc}">≥ 20 cases</td>
+            <td style="text-align:right;color:${tc}">${pct(city.prob_20)}</td></tr>
+        <tr><td style="padding:2px 0;color:${tc}">≥ 50 cases</td>
+            <td style="text-align:right;color:${tc}">${pct(city.prob_50)}</td></tr>
+      </table>
+    </div>`;
+}
 
 CITIES.forEach(city => {
   const color  = vaccColor(city.vacc);
@@ -744,32 +867,17 @@ CITIES.forEach(city => {
     fillOpacity: 0.82
   }).addTo(map);
 
-  const pct = v => (v * 100).toFixed(1) + '%';
-
-  circle.bindPopup(`
-    <div style="font-family:'Inter',sans-serif;min-width:210px;font-size:13px;">
-      <strong style="font-size:15px;">${city.name}</strong>
-      <hr style="margin:6px 0;border-color:#30363d;"/>
-      <table style="border-collapse:collapse;width:100%">
-        <tr><td style="color:#8b949e;padding:2px 0">MMR coverage</td>
-            <td style="text-align:right;font-weight:600;color:#e6edf3">${city.vacc}%</td></tr>
-        <tr><td style="color:#8b949e;padding:2px 0">Population</td>
-            <td style="text-align:right;font-weight:600;color:#e6edf3">${city.pop.toLocaleString()}</td></tr>
-        <tr><td colspan="2" style="padding-top:6px;color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.05em">Outbreak probability</td></tr>
-        <tr><td style="padding:2px 0;color:#e6edf3">≥ 10 cases</td>
-            <td style="text-align:right;font-weight:600;color:${color}">${pct(city.prob_10)}</td></tr>
-        <tr><td style="padding:2px 0;color:#e6edf3">≥ 20 cases</td>
-            <td style="text-align:right;color:#e6edf3">${pct(city.prob_20)}</td></tr>
-        <tr><td style="padding:2px 0;color:#e6edf3">≥ 50 cases</td>
-            <td style="text-align:right;color:#e6edf3">${pct(city.prob_50)}</td></tr>
-      </table>
-    </div>`, {
-    maxWidth: 260
-  });
+  circle.bindPopup(() => buildPopupHtml(city, color), { maxWidth: 260 });
+  circle.bindTooltip(city.name, { permanent: false, direction: 'top', offset: [0, -4], className: 'city-tooltip' });
 
   circle.on('mouseover', () => circle.setStyle({ fillOpacity: 1, weight: 2.5 }));
   circle.on('mouseout',  () => circle.setStyle({ fillOpacity: 0.82, weight: 1.5 }));
 });
+
+/* Push legend behind map-pane (z-index 400) when popup is open so popup is never covered */
+const legendEl = document.querySelector('.map-legend');
+map.on('popupopen',  () => { legendEl.style.zIndex = '300'; });
+map.on('popupclose', () => { legendEl.style.zIndex = '';    });
 
 /* ── Populate city table ─────────────────────────────────────── */
 const tbody = document.getElementById('city-tbody');
@@ -807,11 +915,11 @@ const tbody = document.getElementById('city-tbody');
     localStorage.setItem('theme', theme);
     sun.style.display  = (theme === 'dark')  ? 'block' : 'none';
     moon.style.display = (theme === 'light') ? 'block' : 'none';
-    // Flip tile filter for light mode
-    const tileFilter = (theme === 'dark')
-      ? 'brightness(0.6) saturate(0.7) hue-rotate(200deg)'
-      : 'none';
-    document.querySelectorAll('.leaflet-tile').forEach(t => t.style.filter = tileFilter);
+    // Swap tile layers
+    const add = theme === 'light' ? 'light' : 'dark';
+    const rem = theme === 'light' ? 'dark'  : 'light';
+    if (map.hasLayer(TILES[rem])) map.removeLayer(TILES[rem]);
+    if (!map.hasLayer(TILES[add])) TILES[add].addTo(map);
   }
 
   btn.addEventListener('click', function () {
@@ -822,6 +930,16 @@ const tbody = document.getElementById('city-tbody');
   // Initialise icon visibility from current theme
   const initial = root.getAttribute('data-theme') || 'dark';
   applyTheme(initial);
+})();
+
+/* ── Scroll-hint: dismiss on first scroll (Fitts: remove noise once intent clear) */
+(function () {
+  const hint = document.getElementById('scroll-hint');
+  function dismiss() {
+    hint.classList.add('hidden');
+    window.removeEventListener('scroll', dismiss);
+  }
+  window.addEventListener('scroll', dismiss, { passive: true });
 })();
 
 /* ── Email obfuscation ───────────────────────────────────────── */
