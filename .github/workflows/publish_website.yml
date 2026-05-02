@@ -22,6 +22,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Generate city data from simulation CSVs
+        run: python3 docs/generate_data.py
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
