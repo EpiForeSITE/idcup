@@ -295,6 +295,79 @@
     }
     #scroll-hint svg { opacity: 0.85; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.45)); }
     #scroll-hint.hidden { opacity: 0; pointer-events: none; }
+
+    /* ── Map wrapper + side panel ─────────────────────────────── */
+    #map-wrapper { position: relative; width: 100%; height: 100%; }
+
+    #city-panel {
+      display: none;
+      flex-direction: column;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 1.5rem 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      #map-section { display: flex; align-items: stretch; }
+      #map-wrapper { flex: 0 0 70%; }
+      #city-panel  { flex: 0 0 30%; display: flex; }
+    }
+
+    /* Panel — welcome state */
+    .panel-welcome {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex: 1; text-align: center; gap: 0.65rem; color: var(--muted);
+    }
+    .panel-welcome h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 0; }
+    .panel-welcome p  { font-size: 0.82rem; margin: 0; max-width: 200px; line-height: 1.5; }
+
+    /* Panel — city header */
+    .panel-city-header {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+    }
+    .panel-city-dot {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.18);
+    }
+    [data-theme="light"] .panel-city-dot { box-shadow: 0 0 0 3px rgba(0,0,0,0.10); }
+    .panel-city-name {
+      font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em;
+      margin: 0; color: var(--text); line-height: 1.2;
+    }
+
+    /* Panel — stat cards */
+    .panel-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.2rem;
+    }
+    .panel-stat {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.6rem 0.75rem; display: flex; flex-direction: column; gap: 0.15rem;
+    }
+    .panel-stat-label { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+    .panel-stat-value { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+
+    /* Panel — probability bars */
+    .panel-section-label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .panel-prob-row   { margin-bottom: 0.8rem; }
+    .panel-prob-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; color: var(--text); margin-bottom: 0.3rem;
+    }
+    .panel-prob-label span:last-child { font-weight: 600; }
+    .panel-prob-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .panel-prob-fill  { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+    /* Panel — footer hint */
+    .panel-hint {
+      margin-top: auto; padding-top: 1.2rem;
+      font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--border);
+    }
+
     .section {
       max-width: 900px;
       margin: 0 auto;
@@ -503,11 +576,12 @@
 
 <!-- ── Map subtitle ──────────────────────────────────────────── -->
 <div id="map-subtitle">
-  <span>Circle size = P(&ge;10 cases, 60-day sim). Color = MMR vaccination rate. Click a city for details.</span>
+  <span>Circle size = P(&ge;10 cases, 60-day sim). Color = MMR vaccination rate. Select a city to explore its risk.</span>
 </div>
 
 <!-- ── Map ────────────────────────────────────────────────────── -->
 <section id="map-section">
+  <div id="map-wrapper">
   <div id="map"></div>
 
   <div class="map-legend">
@@ -539,6 +613,8 @@
       <polyline points="6 9 12 15 18 9"/>
     </svg>
   </div>
+  </div><!-- /#map-wrapper -->
+  <aside id="city-panel" aria-live="polite"></aside>
 </section>
 <!-- ── About ──────────────────────────────────────────────────── -->
 <hr class="section-divider" />
@@ -855,6 +931,58 @@ function buildPopupHtml(city, color) {
     </div>`;
 }
 
+/* ── Side-panel functions (desktop ≥768 px) ──────────────────── */
+const PANEL_BP  = 768;
+const cityPanel = document.getElementById('city-panel');
+let   selectedCircle = null;
+
+function isPanelVisible() { return window.innerWidth >= PANEL_BP; }
+
+function buildPanelHtml(city, color) {
+  const pct = v => (v * 100).toFixed(1) + '%';
+  function probBar(label, v) {
+    return `
+      <div class="panel-prob-row">
+        <div class="panel-prob-label"><span>${label}</span><span>${pct(v)}</span></div>
+        <div class="panel-prob-track">
+          <div class="panel-prob-fill" style="width:${v*100}%;background:${color}"></div>
+        </div>
+      </div>`;
+  }
+  return `
+    <div class="panel-city-header">
+      <div class="panel-city-dot" style="background:${color}"></div>
+      <h2 class="panel-city-name">${city.name}</h2>
+    </div>
+    <div class="panel-stats">
+      <div class="panel-stat">
+        <span class="panel-stat-label">MMR Coverage</span>
+        <span class="panel-stat-value">${city.vacc}%</span>
+      </div>
+      <div class="panel-stat">
+        <span class="panel-stat-label">Population</span>
+        <span class="panel-stat-value">${(city.pop / 1e6).toFixed(2)}M</span>
+      </div>
+    </div>
+    <p class="panel-section-label">Outbreak Probability</p>
+    <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.85rem;margin-top:-0.2rem;">200 simulations &middot; 60-day window &middot; single seed case</p>
+    ${probBar('&ge;&thinsp;10 cases', city.prob_10)}
+    ${probBar('&ge;&thinsp;20 cases', city.prob_20)}
+    ${probBar('&ge;&thinsp;50 cases', city.prob_50)}
+    <p class="panel-hint">Click a different city on the map to compare.</p>`;
+}
+
+function showCityPanel(city, color, circle) {
+  if (selectedCircle && selectedCircle !== circle) {
+    selectedCircle.setStyle({ fillOpacity: 0.82, weight: 1.5, color: 'rgba(255,255,255,0.5)' });
+  }
+  selectedCircle = circle;
+  circle.setStyle({ fillOpacity: 1, weight: 3, color: '#ffffff' });
+  cityPanel.innerHTML = buildPanelHtml(city, color);
+}
+
+const cityCircles = new Map();
+
 CITIES.forEach(city => {
   const color  = vaccColor(city.vacc);
   const radius = probRadius(city.prob_10);
@@ -867,12 +995,34 @@ CITIES.forEach(city => {
     fillOpacity: 0.82
   }).addTo(map);
 
-  circle.bindPopup(() => buildPopupHtml(city, color), { maxWidth: 260 });
+  cityCircles.set(city.name, { city, color, circle });
   circle.bindTooltip(city.name, { permanent: false, direction: 'top', offset: [0, -4], className: 'city-tooltip' });
 
-  circle.on('mouseover', () => circle.setStyle({ fillOpacity: 1, weight: 2.5 }));
-  circle.on('mouseout',  () => circle.setStyle({ fillOpacity: 0.82, weight: 1.5 }));
+  circle.on('click', function () {
+    if (isPanelVisible()) {
+      showCityPanel(city, color, circle);
+    } else {
+      L.popup({ maxWidth: 260 })
+        .setLatLng([city.lat, city.lng])
+        .setContent(buildPopupHtml(city, color))
+        .openOn(map);
+    }
+  });
+  circle.on('mouseover', function () {
+    if (circle !== selectedCircle) circle.setStyle({ fillOpacity: 1, weight: 2.5 });
+  });
+  circle.on('mouseout', function () {
+    if (circle !== selectedCircle) circle.setStyle({ fillOpacity: 0.82, weight: 1.5 });
+  });
 });
+
+/* Pre-load highest-risk city in the side panel on desktop */
+(function () {
+  if (!isPanelVisible()) return;
+  const topCity = [...CITIES].sort((a, b) => b.prob_10 - a.prob_10)[0];
+  const entry   = cityCircles.get(topCity.name);
+  if (entry) showCityPanel(entry.city, entry.color, entry.circle);
+})();
 
 /* Push legend behind map-pane (z-index 400) when popup is open so popup is never covered */
 const legendEl = document.querySelector('.map-legend');
