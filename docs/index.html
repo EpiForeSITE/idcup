@@ -14,6 +14,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Apply saved theme before first paint to avoid flash -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
   <style>
     /* ── Design tokens ─────────────────────────────────────────── */
     :root {
@@ -69,6 +79,48 @@
     .logo-text { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; }
     .logo-sub  { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
 
+    /* ── Light mode overrides ────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:       #f6f8fa;
+      --surface:  #ffffff;
+      --surface2: #eaeef2;
+      --border:   #d0d7de;
+      --text:     #1f2328;
+      --muted:    #57606a;
+      --accent:   #0969da;
+      --accent2:  #cf222e;
+    }
+    [data-theme="light"] #map { background: #e8edf2; }
+    [data-theme="light"] .leaflet-tile { filter: none; }
+    [data-theme="light"] header { background: rgba(246, 248, 250, 0.92); }
+    [data-theme="light"] .map-overlay-title { background: rgba(246, 248, 250, 0.92); }
+    [data-theme="light"] .map-legend        { background: rgba(246, 248, 250, 0.92); }
+    [data-theme="light"] .leaflet-popup-content-wrapper {
+      background: #ffffff;
+      color: #1f2328;
+      border: 1px solid #d0d7de;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    [data-theme="light"] .leaflet-popup-tip  { background: #ffffff; }
+    [data-theme="light"] .leaflet-popup-close-button { color: #57606a !important; }
+    [data-theme="light"] .leaflet-popup-close-button:hover { color: #1f2328 !important; }
+
+    /* ── Theme toggle button ────────────────────────────────────── */
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.35rem 0.5rem;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    #theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+    #theme-toggle svg { display: block; }
+
     nav { display: flex; gap: 1.5rem; align-items: center; }
     nav a {
       color: var(--muted);
@@ -94,6 +146,20 @@
 
     /* Leaflet dark tile filter */
     .leaflet-tile { filter: brightness(0.6) saturate(0.7) hue-rotate(200deg); }
+
+    /* Map gesture overlay (injected by JS) */
+    #map-gesture-overlay { font-family: 'Inter', sans-serif; }
+
+    /* Leaflet popup – dark theme */
+    .leaflet-popup-content-wrapper {
+      background: #1f2937;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .leaflet-popup-tip { background: #1f2937; }
+    .leaflet-popup-close-button { color: #8b949e !important; }
+    .leaflet-popup-close-button:hover { color: #e6edf3 !important; }
 
     .map-overlay-title {
       position: absolute;
@@ -365,7 +431,26 @@
     <a href="#about">About</a>
     <a href="#data">Data</a>
     <a href="#report">Report an Error</a>
+    <a href="https://epistorm.github.io/IDWC26-dashview/" target="_blank" rel="noopener">Importation Risk ↗</a>
     <a href="https://github.com/EpiForeSITE/idcup" target="_blank" rel="noopener">GitHub ↗</a>
+    <button id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+      <!-- Sun icon (shown in dark mode) -->
+      <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2"  x2="12" y2="5"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2"  y1="12" x2="5"  y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.22"  y1="4.22"  x2="6.34"  y2="6.34"/>
+        <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+        <line x1="4.22"  y1="19.78" x2="6.34"  y2="17.66"/>
+        <line x1="17.66" y1="6.34"  x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon icon (shown in light mode) -->
+      <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
   </nav>
 </header>
 
@@ -381,15 +466,15 @@
   <div class="map-legend">
     <h4>Circle size &rarr; Prob(&ge;10 cases)</h4>
     <div class="legend-row">
-      <div class="legend-circle" style="width:14px;height:14px;background:#E69F00;opacity:0.85;"></div>
+      <div class="legend-circle" style="width:7px;height:7px;background:#E69F00;opacity:0.85;"></div>
       <span>10 % probability</span>
     </div>
     <div class="legend-row">
-      <div class="legend-circle" style="width:22px;height:22px;background:#E69F00;opacity:0.85;"></div>
+      <div class="legend-circle" style="width:11px;height:11px;background:#E69F00;opacity:0.85;"></div>
       <span>40 % probability</span>
     </div>
     <div class="legend-row">
-      <div class="legend-circle" style="width:34px;height:34px;background:#E69F00;opacity:0.85;"></div>
+      <div class="legend-circle" style="width:17px;height:17px;background:#E69F00;opacity:0.85;"></div>
       <span>70 % probability</span>
     </div>
     <hr class="legend-divider"/>
@@ -455,6 +540,10 @@
   </div>
 
   <p style="margin-top:1.5rem;">
+    Looking for importation risk? See the companion dashboard:
+    <a href="https://epistorm.github.io/IDWC26-dashview/" target="_blank" rel="noopener">IDWC26 Importation Risk Dashboard ↗</a>.
+  </p>
+  <p>
     This project has been developed by
     <a href="https://github.com/EpiForeSITE" target="_blank" rel="noopener">University of Utah's ForeSITE Center</a>
     as part of a collaboration across
@@ -549,7 +638,7 @@
 
 <!-- ── Leaflet JS ─────────────────────────────────────────────── -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLcE=" crossorigin=""></script>
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <!-- City data generated by docs/generate_data.py from scenario CSVs -->
 <script src="data.js"></script>
@@ -565,9 +654,9 @@ function vaccColor(vacc) {
   return '#D55E00';                   // vermilion (low coverage → higher risk)
 }
 
-/* ── Radius scaled by prob_10 (min 12 px, max 70 px total) ────── */
-const MIN_RADIUS    = 12;
-const RADIUS_SCALE  = 58;
+/* ── Radius scaled by prob_10 (min 6 px, max 35 px total) ────── */
+const MIN_RADIUS    = 6;
+const RADIUS_SCALE  = 29;
 function probRadius(p) { return MIN_RADIUS + p * RADIUS_SCALE; }
 
 /* ── Leaflet map ─────────────────────────────────────────────── */
@@ -575,8 +664,68 @@ const map = L.map('map', {
   center: [38.5, -97],
   zoom: 4,
   zoomControl: true,
-  attributionControl: true
+  attributionControl: true,
+  scrollWheelZoom: false,   // enabled only when Ctrl is held
+  dragging: !L.Browser.mobile
 });
+
+/* Gesture handling: Ctrl+scroll to zoom, two-finger on touch */
+(function gestureHandling() {
+  const mapEl  = document.getElementById('map');
+  let   hideTimer;
+
+  // Overlay element
+  const overlay = document.createElement('div');
+  overlay.id = 'map-gesture-overlay';
+  overlay.style.cssText = [
+    'position:absolute','inset:0','z-index:900',
+    'display:flex','align-items:center','justify-content:center',
+    'pointer-events:none','opacity:0','transition:opacity 0.25s',
+    'background:rgba(0,0,0,0.45)'
+  ].join(';');
+  const msg = document.createElement('div');
+  msg.style.cssText = [
+    'background:rgba(0,0,0,0.75)','color:#fff','font-size:0.95rem',
+    'font-weight:600','padding:0.65rem 1.2rem','border-radius:8px',
+    'pointer-events:none','text-align:center','max-width:240px','line-height:1.4'
+  ].join(';');
+  overlay.appendChild(msg);
+  mapEl.style.position = 'relative';
+  mapEl.appendChild(overlay);
+
+  function showOverlay(text) {
+    msg.textContent = text;
+    overlay.style.opacity = '1';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { overlay.style.opacity = '0'; }, 1500);
+  }
+
+  // Desktop: allow scroll-wheel zoom only while Ctrl is held
+  mapEl.addEventListener('wheel', function (e) {
+    if (e.ctrlKey || e.metaKey) {
+      map.scrollWheelZoom.enable();
+    } else {
+      map.scrollWheelZoom.disable();
+      showOverlay('Use Ctrl + scroll to zoom the map');
+    }
+  }, { passive: true });
+
+  // Touch: require two fingers to pan/zoom
+  if (L.Browser.touch) {
+    map.dragging.disable();
+    mapEl.addEventListener('touchstart', function (e) {
+      if (e.touches.length >= 2) {
+        map.dragging.enable();
+      } else {
+        map.dragging.disable();
+        showOverlay('Use two fingers to move the map');
+      }
+    }, { passive: true });
+    mapEl.addEventListener('touchend', function () {
+      map.dragging.disable();
+    }, { passive: true });
+  }
+})();
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -603,16 +752,16 @@ CITIES.forEach(city => {
       <hr style="margin:6px 0;border-color:#30363d;"/>
       <table style="border-collapse:collapse;width:100%">
         <tr><td style="color:#8b949e;padding:2px 0">MMR coverage</td>
-            <td style="text-align:right;font-weight:600">${city.vacc}%</td></tr>
+            <td style="text-align:right;font-weight:600;color:#e6edf3">${city.vacc}%</td></tr>
         <tr><td style="color:#8b949e;padding:2px 0">Population</td>
-            <td style="text-align:right;font-weight:600">${city.pop.toLocaleString()}</td></tr>
+            <td style="text-align:right;font-weight:600;color:#e6edf3">${city.pop.toLocaleString()}</td></tr>
         <tr><td colspan="2" style="padding-top:6px;color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.05em">Outbreak probability</td></tr>
-        <tr><td style="padding:2px 0">≥ 10 cases</td>
+        <tr><td style="padding:2px 0;color:#e6edf3">≥ 10 cases</td>
             <td style="text-align:right;font-weight:600;color:${color}">${pct(city.prob_10)}</td></tr>
-        <tr><td style="padding:2px 0">≥ 20 cases</td>
-            <td style="text-align:right">${pct(city.prob_20)}</td></tr>
-        <tr><td style="padding:2px 0">≥ 50 cases</td>
-            <td style="text-align:right">${pct(city.prob_50)}</td></tr>
+        <tr><td style="padding:2px 0;color:#e6edf3">≥ 20 cases</td>
+            <td style="text-align:right;color:#e6edf3">${pct(city.prob_20)}</td></tr>
+        <tr><td style="padding:2px 0;color:#e6edf3">≥ 50 cases</td>
+            <td style="text-align:right;color:#e6edf3">${pct(city.prob_50)}</td></tr>
       </table>
     </div>`, {
     maxWidth: 260
@@ -645,6 +794,35 @@ const tbody = document.getElementById('city-tbody');
     <td>${bar(city.prob_50, color)}</td>`;
   tbody.appendChild(tr);
 });
+
+/* ── Theme toggle ───────────────────────────────────────────── */
+(function () {
+  const root   = document.documentElement;
+  const btn    = document.getElementById('theme-toggle');
+  const sun    = document.getElementById('icon-sun');
+  const moon   = document.getElementById('icon-moon');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    sun.style.display  = (theme === 'dark')  ? 'block' : 'none';
+    moon.style.display = (theme === 'light') ? 'block' : 'none';
+    // Flip tile filter for light mode
+    const tileFilter = (theme === 'dark')
+      ? 'brightness(0.6) saturate(0.7) hue-rotate(200deg)'
+      : 'none';
+    document.querySelectorAll('.leaflet-tile').forEach(t => t.style.filter = tileFilter);
+  }
+
+  btn.addEventListener('click', function () {
+    const current = root.getAttribute('data-theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  // Initialise icon visibility from current theme
+  const initial = root.getAttribute('data-theme') || 'dark';
+  applyTheme(initial);
+})();
 
 /* ── Email obfuscation ───────────────────────────────────────── */
 (function () {

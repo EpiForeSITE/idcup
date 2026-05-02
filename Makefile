@@ -9,6 +9,7 @@ help:
 	@echo "  update-measles         Updates to the latest version from the UofUEpiBio/measles repository"
 	@echo "  scenario               Generates a scenario markdown file for a specified city (default: Miami)"
 	@echo "  all                    Generates scenario markdown files for a predefined list of cities"
+	@echo "  serve                  Serves the docs/ site locally (default PORT=8080)"
 	@echo "  help                   Displays this help message"
 
 data/census_age.csv: data/census_age.R 
@@ -44,4 +45,9 @@ all:
 		$(MAKE) scenario CITY="$$city"; \
 	done
 
-.PHONY: help update-epiworldr update-measles scenario
+PORT ?= 8080
+serve:
+	@echo "Serving docs/ at http://localhost:$(PORT) — open this URL in your browser."
+	cd docs && python3 -m http.server $(PORT)
+
+.PHONY: help update-epiworldr update-measles scenario serve
