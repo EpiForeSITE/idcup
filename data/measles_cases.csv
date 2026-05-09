@@ -34,6 +34,8 @@ Houston,Texas,Harris,"Harris, Texas",48201,county,2025-08-07,case_lab-confirmed,
 Houston,Texas,Harris,"Harris, Texas",48201,county,2025-08-07,case_local,1
 Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-15,case_lab-confirmed,4
 Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-15,case_local,4
+Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-29,case_lab-confirmed,1
+Houston,Texas,Harris,"Harris, Texas",48201,county,2026-04-29,case_local,1
 Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_lab-confirmed,1
 Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_local,1
 Kansas City,Missouri,Jackson,"Jackson, Missouri",29095,county,2026-03-03,case_unvaccinated,1
@@ -95,6 +97,8 @@ New York City,New York,New York,"New York City, New York",36061,county,2026-03-1
 New York City,New York,New York,"New York City, New York",36061,county,2026-03-12,case_local,2
 New York City,New York,New York,"New York City, New York",36061,county,2026-03-27,case_lab-confirmed,1
 New York City,New York,New York,"New York City, New York",36061,county,2026-03-27,case_local,1
+New York City,New York,New York,"New York City, New York",36061,county,2026-05-08,case_lab-confirmed,2
+New York City,New York,New York,"New York City, New York",36061,county,2026-05-08,case_local,2
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-03-31,case_imported,1
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-03-31,case_lab-confirmed,1
 Philadelphia,Pennsylvania,Philadelphia,"Philadelphia, Pennsylvania",42101,county,2025-04-11,case_imported,1
