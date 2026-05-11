@@ -144,6 +144,15 @@ N <- sum(census_age$total)
 
 ```{r}
 #| label: calibrating-mixing
+# Ensuring symmetry
+# So that N(i) C(i,j) = N(j) C(j,i)
+mixing <- measles::make_cmat_symmetric(
+  cmat = mixing,
+  pop = census_age$total
+)
+
+# Calibrating the mixing matrix 
+# to achieve a target reproduction number (R0)
 calib_scale <- calibrate_mixing_model(
   target_rep_number = 12,
   transmission_prob = 0.2,
