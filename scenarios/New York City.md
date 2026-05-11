@@ -59,9 +59,9 @@ across the population. We can now run the simulations.
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00m
-    Total elapsed t     : 2.00m (200 runs)
-    Last run speed      : 51.95 million agents x day / second
-    Average run speed   : 84.95 million agents x day / second
+    Total elapsed t     : 3.00m (200 runs)
+    Last run speed      : 32.64 million agents x day / second
+    Average run speed   : 65.29 million agents x day / second
     Rewiring            : off
     Last seed used      : 628712762
 
@@ -88,36 +88,37 @@ across the population. We can now run the simulations.
      - Quarantine period               : 21.0000
      - Quarantine willingness          : 0.9000
      - Rash period                     : 3.0000
+     - Rash reduction contact rate     : 1.0000
      - Transmission rate               : 0.2000
      - Vaccination rate                : 0.9500
      - Vax efficacy                    : 0.9700
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 1000007 -> 999998
-      - ( 1) Latent                  :       2 -> 2
-      - ( 2) Prodromal               :       0 -> 0
-      - ( 3) Rash                    :       0 -> 1
-      - ( 4) Isolated                :       0 -> 0
-      - ( 5) Isolated Recovered      :       0 -> 1
-      - ( 6) Quarantined Latent      :       0 -> 0
-      - ( 7) Quarantined Susceptible :       0 -> 0
+      - ( 0) Susceptible             : 1000007 -> 999979
+      - ( 1) Latent                  :       2 -> 4
+      - ( 2) Prodromal               :       0 -> 2
+      - ( 3) Rash                    :       0 -> 0
+      - ( 4) Isolated                :       0 -> 1
+      - ( 5) Isolated Recovered      :       0 -> 2
+      - ( 6) Quarantined Latent      :       0 -> 1
+      - ( 7) Quarantined Susceptible :       0 -> 3
       - ( 8) Quarantined Prodromal   :       0 -> 0
       - ( 9) Quarantined Recovered   :       0 -> 0
       - (10) Hospitalized            :       0 -> 0
-      - (11) Recovered               :       0 -> 7
+      - (11) Recovered               :       0 -> 17
 
     Transition Probabilities:
      - Susceptible              1.00  0.00     -     -     -     -     -  0.00     -     -     -     -
-     - Latent                      -  0.91  0.08     -     -     -     -     -  0.01     -     -     -
-     - Prodromal                   -     -  0.70  0.22     -     -     -     -  0.09     -     -     -
-     - Rash                        -     -     -  0.14  0.14  0.43     -     -     -     -  0.14  0.14
-     - Isolated                    -     -     -  0.12  0.50  0.38     -     -     -     -     -     -
-     - Isolated Recovered          -     -     -     -     -  0.90     -     -     -     -     -  0.10
+     - Latent                      -  0.92  0.08     -     -     -  0.00     -     -     -     -     -
+     - Prodromal                   -     -  0.80  0.19     -     -     -     -  0.01     -     -     -
+     - Rash                        -     -     -  0.20  0.37  0.17     -     -     -     -  0.07  0.20
+     - Isolated                    -     -     -  0.27  0.45  0.18     -     -     -     -     -  0.09
+     - Isolated Recovered          -     -     -     -     -  0.87     -     -     -     -     -  0.13
      - Quarantined Latent          -     -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible  0.05     -     -     -     -     -     -  0.95     -     -     -     -
-     - Quarantined Prodromal       -     -     -     -  0.19     -     -     -  0.81     -     -     -
+     - Quarantined Prodromal       -     -     -     -  1.00     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized                -     -     -     -     -     -     -     -     -     -  0.83  0.17
+     - Hospitalized                -     -     -     -     -     -     -     -     -     -  0.67  0.33
      - Recovered                   -     -     -     -     -     -     -     -     -     -     -  1.00
 
 ![](New-York-City_files/figure-commonmark/plotting-outbreak-size1-1.png)
@@ -129,5 +130,5 @@ We can save the results for further analysis.
 ## Session info
 
 This document was generated using the `{measles}` R package version
-0.3.0.0 and the `{epiworldR}` package version 0.15.0.0 on 2026-04-27. We
+0.3.2.0 and the `{epiworldR}` package version 0.15.1.0 on 2026-05-11. We
 used R version 4.5.3, running on Linux with x86_64 architecture.
