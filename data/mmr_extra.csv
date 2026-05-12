@@ -1,0 +1,12 @@
+state,county,city,state_full,avg_mmr
+CA,Los Angeles,Los Angeles,California,0.956655948553071
+CA,San Francisco,San Francisco,California,0.958521739130436
+MA,Suffolk,Boston,Massachusetts,0.932892857142857
+NY,New York,New York City,New York,0.985379746835443
+PA,Philadelphia,Philadelphia,Pennsylvania,0.961554634831461
+TX,Dallas,Dallas,Texas,0.948299082568807
+TX,Harris,Houston,Texas,0.933698453608247
+WA,King,Seattle,Washington,0.94792564102564
+GA,Fulton,Atlanta,Georgia,0.892
+FL,Miami-Dade,Miami,Florida,0.902
+MO,Jackson,Kansas City,Missouri,0.895
