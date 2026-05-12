@@ -53,9 +53,9 @@ across the population. We can now run the simulations.
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00m
-    Total elapsed t     : 2.00m (200 runs)
-    Last run speed      : 31.07 million agents x day / second
-    Average run speed   : 56.00 million agents x day / second
+    Total elapsed t     : 3.00m (200 runs)
+    Last run speed      : 24.85 million agents x day / second
+    Average run speed   : 47.74 million agents x day / second
     Rewiring            : off
     Last seed used      : 628712762
 
@@ -82,12 +82,13 @@ across the population. We can now run the simulations.
      - Quarantine period               : 21.0000
      - Quarantine willingness          : 0.9000
      - Rash period                     : 3.0000
+     - Rash reduction contact rate     : 1.0000
      - Transmission rate               : 0.2000
      - Vaccination rate                : 0.9500
      - Vax efficacy                    : 0.9700
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 781000 -> 781000
+      - ( 0) Susceptible             : 781000 -> 780994
       - ( 1) Latent                  :      2 -> 0
       - ( 2) Prodromal               :      0 -> 0
       - ( 3) Rash                    :      0 -> 0
@@ -98,18 +99,18 @@ across the population. We can now run the simulations.
       - ( 8) Quarantined Prodromal   :      0 -> 0
       - ( 9) Quarantined Recovered   :      0 -> 0
       - (10) Hospitalized            :      0 -> 0
-      - (11) Recovered               :      0 -> 1
+      - (11) Recovered               :      0 -> 7
 
     Transition Probabilities:
      - Susceptible              1.00  0.00     -     -     -     -     -  0.00     -     -     -     -
-     - Latent                      -  0.78  0.22     -     -     -     -     -     -     -     -     -
-     - Prodromal                   -     -     -  1.00     -     -     -     -     -     -     -     -
-     - Rash                        -     -     -  0.50  0.25     -     -     -     -     -     -  0.25
-     - Isolated                    -     -     -     -     -  1.00     -     -     -     -     -     -
-     - Isolated Recovered          -     -     -     -     -  1.00     -     -     -     -     -     -
-     - Quarantined Latent          -     -     -     -     -     -     -     -     -     -     -     -
+     - Latent                      -  0.73  0.17     -     -     -  0.10     -     -     -     -     -
+     - Prodromal                   -     -  0.64  0.29     -     -     -     -  0.07     -     -     -
+     - Rash                        -     -     -  0.25  0.38  0.25     -     -     -     -     -  0.12
+     - Isolated                    -     -     -  0.13  0.53  0.27     -     -     -     -     -  0.07
+     - Isolated Recovered          -     -     -     -     -  0.91     -     -     -     -     -  0.09
+     - Quarantined Latent          -     -     -     -     -     -  0.85     -  0.15     -     -     -
      - Quarantined Susceptible  0.05     -     -     -     -     -     -  0.95     -     -     -     -
-     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Prodromal       -     -     -     -  0.24     -     -     -  0.76     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -     -
      - Hospitalized                -     -     -     -     -     -     -     -     -     -     -     -
      - Recovered                   -     -     -     -     -     -     -     -     -     -     -  1.00
@@ -123,5 +124,5 @@ We can save the results for further analysis.
 ## Session info
 
 This document was generated using the `{measles}` R package version
-0.3.0.0 and the `{epiworldR}` package version 0.15.0.0 on 2026-04-27. We
+0.3.2.0 and the `{epiworldR}` package version 0.15.1.0 on 2026-05-11. We
 used R version 4.5.3, running on Linux with x86_64 architecture.
