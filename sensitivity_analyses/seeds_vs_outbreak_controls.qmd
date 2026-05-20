@@ -1,0 +1,148 @@
+---
+format: gfm
+---
+
+# Outbreak size vs seed cases with demographic controls
+
+```{r}
+#| label: setup
+#| echo: false
+#| warning: false
+#| message: false
+library(data.table)
+library(ggplot2)
+```
+
+```{r}
+#| label: read-simulations
+#| echo: false
+read_outbreak_files <- function(files, run_label, suffix_pattern) {
+  if (length(files) == 0L) {
+    return(data.table())
+  }
+
+  rbindlist(lapply(files, function(fn) {
+    city <- basename(fn)
+    city <- sub(suffix_pattern, "", city)
+
+    dat <- fread(fn)[, .(sim_num, date, outbreak_size)]
+    dat[, city := city]
+    dat[, run_label := run_label]
+    dat[, seed_cases := outbreak_size[1], by = .(sim_num)]
+    dat
+  }))
+}
+
+baseline_files <- list.files(
+  "scenarios",
+  pattern = "_outbreak_size\\.csv$",
+  full.names = TRUE
+)
+
+plus1_files <- list.files(
+  "scenarios",
+  pattern = "_outbreak_size_plus1seed\\.csv$",
+  full.names = TRUE
+)
+
+baseline <- read_outbreak_files(
+  baseline_files,
+  run_label = "Baseline",
+  suffix_pattern = "_outbreak_size\\.csv$"
+)
+
+plus1 <- read_outbreak_files(
+  plus1_files,
+  run_label = "Baseline +1 seed",
+  suffix_pattern = "_outbreak_size_plus1seed\\.csv$"
+)
+
+outbreaks <- rbindlist(list(baseline, plus1), fill = TRUE)
+
+if (nrow(outbreaks) == 0L) {
+  stop("No outbreak size files found in scenarios/.")
+}
+
+final_outbreaks <- outbreaks[
+  ,
+  .SD[date == max(date)],
+  by = .(city, sim_num, run_label, seed_cases)
+]
+```
+
+```{r}
+#| label: build-controls
+#| echo: false
+population <- fread("data/population.csv")[, .(city, Population)]
+mmr <- fread("data/mmr.csv", comment.char = "#")[, .(city, vacc_rate)]
+
+census <- fread("data/census_age.csv")
+census[, pop_share := total / sum(total), by = city]
+
+age_wide <- dcast(census, city ~ age_group, value.var = "pop_share", fill = 0)
+age_matrix <- as.matrix(age_wide[, -"city"])
+rownames(age_matrix) <- age_wide$city
+
+age_pca <- prcomp(age_matrix, center = TRUE, scale. = TRUE)
+age_controls <- data.table(
+  city = rownames(age_matrix),
+  age_pc1 = age_pca$x[, 1],
+  age_entropy = -rowSums(age_matrix * log(pmax(age_matrix, 1e-12)))
+)
+
+analysis <- merge(final_outbreaks, population, by = "city", all.x = TRUE)
+analysis <- merge(analysis, mmr, by = "city", all.x = TRUE)
+analysis <- merge(analysis, age_controls, by = "city", all.x = TRUE)
+analysis <- na.omit(analysis)
+```
+
+```{r}
+#| label: regression
+#| echo: false
+fit <- lm(
+  log1p(outbreak_size) ~ seed_cases + log(Population) + vacc_rate + age_pc1 + age_entropy,
+  data = analysis
+)
+
+coef_table <- as.data.table(summary(fit)$coefficients, keep.rownames = "term")
+setnames(coef_table, c("term", "estimate", "std.error", "statistic", "p.value"))
+
+coef_table |>
+  knitr::kable(
+    digits = 4,
+    caption = "Linear model of log(1 + outbreak size) controlling for population size, vaccination rate, and population structure."
+  )
+```
+
+```{r}
+#| label: plot
+#| echo: false
+ggplot(
+  analysis,
+  aes(x = seed_cases, y = outbreak_size, color = vacc_rate, size = Population)
+) +
+  geom_jitter(width = 0.1, alpha = 0.35) +
+  facet_wrap(~ run_label) +
+  labs(
+    title = "Outbreak size versus number of seed cases",
+    subtitle = "Point color indicates vaccination rate; point size indicates population",
+    x = "Seed cases",
+    y = "Final outbreak size",
+    color = "Vaccination\nrate (%)",
+    size = "Population"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#| label: model-note
+#| echo: false
+#| results: asis
+cat(
+  sprintf(
+    "Model fitted on %i simulation outcomes across %i cities.",
+    nrow(analysis),
+    uniqueN(analysis$city)
+  )
+)
+```

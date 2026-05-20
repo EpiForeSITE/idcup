@@ -26,7 +26,7 @@ The following figure summarizes the simulated measles outbreak size over time fo
 library(data.table)
 library(ggplot2)
 
-fns <- list.files("scenarios/", pattern = "outbreak.*\\.csv", full.names = TRUE)
+fns <- list.files("scenarios/", pattern = "_outbreak_size\\.csv$", full.names = TRUE)
 
 # Reading the datasets in
 outbreaks <- lapply(fns, \(fn) {

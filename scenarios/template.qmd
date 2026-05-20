@@ -284,6 +284,43 @@ outbreak_size <- ans$outbreak_size |> as.data.table()
 hospitalizations <- ans$hospitalizations |> as.data.table()
 ```
 
+## Additional +1 seed scenario
+
+To assess how outbreak outcomes change with one additional initial case, we run a second set of simulations with the number of seed cases increased by one and save the outputs separately.
+
+```{r}
+#| label: running-simulations-plus1-seed
+expected_active_cases_plus1 <- expected_active_cases + 1L
+
+get_virus(measles_model, 0L) |>
+  set_distribution_virus(
+    distfun = distribute_virus_randomly(
+      prevalence = expected_active_cases_plus1,
+      as_proportion = FALSE
+    )
+  )
+
+measles_model |>
+  run_multiple(
+    ndays = params$ndays,
+    nsims = params$nsims,
+    seed  = params$seed,
+    saver = make_saver("outbreak_size", "hospitalizations"),
+    nthreads = params$nthreads
+  )
+```
+
+```{r}
+#| label: extracting-results-plus1-seed
+ans_plus1 <- measles_model |>
+  run_multiple_get_results(
+    freader = data.table::fread
+  )
+
+outbreak_size_plus1 <- ans_plus1$outbreak_size |> as.data.table()
+hospitalizations_plus1 <- ans_plus1$hospitalizations |> as.data.table()
+```
+
 
 ```{r}
 #| label: plotting-outbreak-size1
@@ -340,6 +377,8 @@ We can save the results for further analysis.
 #| label: saving-results
 fwrite(outbreak_size, sprintf("%s_outbreak_size.csv", params$city))
 fwrite(hospitalizations, sprintf("%s_hospitalizations.csv", params$city))
+fwrite(outbreak_size_plus1, sprintf("%s_outbreak_size_plus1seed.csv", params$city))
+fwrite(hospitalizations_plus1, sprintf("%s_hospitalizations_plus1seed.csv", params$city))
 ```
 
 ## Session info
