@@ -20,6 +20,9 @@ Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-12,case_unvaccinat
 Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_lab-confirmed,3
 Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_local,3
 Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2025-09-23,case_unvaccinated,2
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2026-05-19,case_imported,3
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2026-05-19,case_lab-confirmed,3
+Atlanta,Georgia,Fulton,"Fulton, Georgia",13121,county,2026-05-19,case_unvaccinated,3
 Boston,Massachusetts,Suffolk,"Greater Boston, Massachusetts",25025,county,2026-02-27,case_imported,1
 Boston,Massachusetts,Suffolk,"Greater Boston, Massachusetts",25025,county,2026-02-27,case_lab-confirmed,1
 Dallas,Texas,Dallas,"Dallas, Texas",48113,county,2025-06-24,case_lab-confirmed,1
@@ -57,6 +60,8 @@ Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02
 Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-02,case_lab-confirmed,1
 Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-19,case_imported,1
 Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-02-19,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-05-18,case_lab-confirmed,1
+Los Angeles,California,Los Angeles,"Los Angeles, California",6037,county,2026-05-18,case_local,1
 Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2025-03-06,case_lab-confirmed,1
 Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2025-03-06,case_local,1
 Miami,Florida,Miami-Dade,"Miami-Dade, Florida",12086,county,2026-01-27,case_lab-confirmed,1
