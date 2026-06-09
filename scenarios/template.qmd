@@ -2,7 +2,7 @@
 format: gfm
 params:
   city: "Miami"
-  max_pop: 100000
+  max_pop: 10000
   nthreads: 2
   echo: false
   seed: 8812
@@ -138,6 +138,20 @@ N <- min(params$max_pop, sum(population$Population))
 
 census_age[, total := ceiling(total/sum(total) * N)]
 census_age[, vacc_rate := vacc_rate]
+
+# Linear extrapolation of the vaccination rate: 
+# Whatever the value is for vacc_rate up to 92 for 18+
+# (see https://pmc.ncbi.nlm.nih.gov/articles/PMC4438887/)
+census_age[, age_upper := as.integer(gsub(".+to", "", age_group))]
+census_age[, age_lower := as.integer(gsub("to.+", "", age_group))] 
+census_age[.N, age_lower := 80]
+
+census_age[
+  age_upper >4 & age_upper <= 19,
+  vacc_rate_adj := seq(from = vacc_rate[1], to = 0.92, length.out = .N)
+  ]
+census_age[1, vacc_rate_adj := ]
+
 
 N <- sum(census_age$total)
 ```
@@ -284,6 +298,58 @@ outbreak_size <- ans$outbreak_size |> as.data.table()
 hospitalizations <- ans$hospitalizations |> as.data.table()
 ```
 
+Visualizing the outbreak size over time:
+
+```{r}
+#| label: plotting-outbreak-size1-baseline
+# Aggregating to get the final
+ggplot2::ggplot(
+  outbreak_size,
+  ggplot2::aes(x = date, y = outbreak_size)
+) +
+  ggplot2::geom_point(
+    color = "blue",
+    alpha = 0.2,
+    size = 1.5
+  ) +
+  ggplot2::labs(
+    title = paste("Measles outbreak size in", params$city),
+    subtitle = sprintf(
+      "Mixing model with census data (%i simulations)",
+      params$nsims
+    ),
+    x = "Day",
+    y = "Cases"
+  ) +
+  ggplot2::theme_minimal()
+```
+
+
+```{r}
+#| label: plotting-outbreak-size2-baseline
+# Aggregating to get the final
+final_outbreak <- outbreak_size[date == max(date)]
+median_outbreak_size <- median(final_outbreak$outbreak_size)
+
+ggplot2::ggplot(final_outbreak, ggplot2::aes(x = outbreak_size)) +
+  ggplot2::geom_histogram(fill = "steelblue", color = "white") +
+  ggplot2::labs(
+    title = sprintf(
+      "Measles outbreak size in %s (median: %.2f)",
+      params$city,
+      median_outbreak_size
+    ),
+    subtitle = sprintf(
+      "Mixing model with census data (%i simulations)",
+      params$nsims
+    ),
+    x = "Outbreak size",
+    y = "Count"
+  ) +
+  ggplot2::theme_minimal()
+```
+
+
 ## Additional +1 seed scenario
 
 To assess how outbreak outcomes change with one additional initial case, we run a second set of simulations with the number of seed cases increased by one and save the outputs separately.
@@ -323,10 +389,10 @@ hospitalizations_plus1 <- ans_plus1$hospitalizations |> as.data.table()
 
 
 ```{r}
-#| label: plotting-outbreak-size1
+#| label: plotting-outbreak-size1-plus1-seed
 # Aggregating to get the final
 ggplot2::ggplot(
-  outbreak_size,
+  outbreak_size_plus1,
   ggplot2::aes(x = date, y = outbreak_size)
 ) +
   ggplot2::geom_point(
@@ -348,9 +414,9 @@ ggplot2::ggplot(
 
 
 ```{r}
-#| label: plotting-outbreak-size2
+#| label: plotting-outbreak-size2-plus1-seed
 # Aggregating to get the final
-final_outbreak <- outbreak_size[date == max(date)]
+final_outbreak <- outbreak_size_plus1[date == max(date)]
 median_outbreak_size <- median(final_outbreak$outbreak_size)
 
 ggplot2::ggplot(final_outbreak, ggplot2::aes(x = outbreak_size)) +
