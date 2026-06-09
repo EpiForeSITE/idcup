@@ -146,11 +146,17 @@ census_age[, age_upper := as.integer(gsub(".+to", "", age_group))]
 census_age[, age_lower := as.integer(gsub("to.+", "", age_group))] 
 census_age[.N, age_lower := 80]
 
+# Reading vaccination for under age kids
+vacc_under5 <- fread("data/mmr_under5.csv")[city == params$city]$vacc_rate / 100
+
 census_age[
   age_upper >4 & age_upper <= 19,
   vacc_rate_adj := seq(from = vacc_rate[1], to = 0.92, length.out = .N)
   ]
-census_age[1, vacc_rate_adj := ]
+census_age[1, vacc_rate_adj := vacc_under5]
+
+# For the rest, we assume 0.92 percent vaccination rate
+census_age[is.na(vacc_rate_adj), vacc_rate_adj := 0.92]
 
 
 N <- sum(census_age$total)
