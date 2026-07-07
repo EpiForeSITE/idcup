@@ -8,6 +8,8 @@
 !data/measles_cases.csv
 !scenarios/*_outbreak_size.csv
 !scenarios/*_hospitalizations.csv
+!scenarios/*_outbreak_size_plus1seed.csv
+!scenarios/*_hospitalizations_plus1seed.csv
 .DS_Store
 scenarios/template.md
 scenarios/template_files/

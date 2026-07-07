@@ -1,0 +1,14 @@
+# Data from
+# https://www.cdc.gov/mmwr/volumes/73/wr/mm7338a3.htm
+city,geography_used,vacc_rate
+Los Angeles,California,88.6
+San Francisco,California,88.6
+New York City,New York City,86.7
+Boston,Massachusetts,94.9
+Houston,Houston,87.8
+Dallas,Texas,92.8
+Philadelphia,Philadelphia,89.7
+Atlanta,Georgia,84.3
+Seattle,Washington,91.1
+Miami,Florida,90.8
+Kansas City,Missouri,91.7

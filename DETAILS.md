@@ -25,6 +25,7 @@ scenarios/
   data/                City-specific data symlinked/copied for rendering
 sensitivity_analyses/
   scaling_analysis.md  Report on why downscaling works in the model   
+  seeds_vs_outbreak_controls.qmd  Seed-vs-outbreak analysis with demographic controls
 Makefile               Targets for data generation and package updates
 ```
 
