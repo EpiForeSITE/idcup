@@ -99,20 +99,43 @@ analysis <- na.omit(analysis)
 ```{r}
 #| label: regression
 #| echo: false
-fit <- lm(
-  log1p(outbreak_size) ~ seed_cases + log(Population) + vacc_rate + age_pc1 + age_entropy,
+fit <- glm(
+  outbreak_size ~
+    seed_cases +
+    log(Population) +
+    vacc_rate + age_pc1 + age_entropy,
+  family = poisson(),
   data = analysis
 )
 
-coef_table <- as.data.table(summary(fit)$coefficients, keep.rownames = "term")
-setnames(coef_table, c("term", "estimate", "std.error", "statistic", "p.value"))
-
-coef_table |>
-  knitr::kable(
-    digits = 4,
-    caption = "Linear model of log(1 + outbreak size) controlling for population size, vaccination rate, and population structure."
-  )
+summary(fit)
 ```
+
+Regarding the accuracy, the model's pseudo-R² (McFadden's R²) is `r round(1 - fit$deviance / fit$null.deviance, 3)`, indicating that the model explains a modest proportion of the variance in outbreak size. The coefficients suggest that each additional seed case is associated with an increase in expected outbreak size, controlling for population, vaccination rate, and age distribution.
+
+```{r}
+#| label: marginal-effect
+#| echo: false
+avg_city <- data.table(
+  seed_cases = mean(analysis$seed_cases),
+  Population = mean(analysis$Population),
+  vacc_rate = mean(analysis$vacc_rate),
+  age_pc1 = mean(analysis$age_pc1),
+  age_entropy = mean(analysis$age_entropy)
+)
+
+pred_base <- predict(fit, newdata = avg_city, type = "response")
+pred_plus1 <- predict(
+  fit,
+  newdata = transform(avg_city, seed_cases = seed_cases + 1),
+  type = "response"
+)
+
+marginal_effect <- pred_plus1 - pred_base
+marginal_effect
+```
+
+Thus, for the average city, the marginal effect of adding one additional case is an increase of approximately `r round(marginal_effect, 2)` in the expected outbreak size.
 
 ```{r}
 #| label: plot
