@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+title: "Agent-Based Modeling of Measles in US Cities Hosting the 2026 FIFA World Cup"
+authors:
+  - family-names: "Vega Yon"
+    given-names: "George G."
+    orcid: "https://orcid.org/0000-0002-3171-0844"
+abstract: "Agent-based measles outbreak simulations for US cities hosting the 2026 FIFA World Cup."
+repository-code: "https://github.com/EpiForeSITE/idcup"
+url: "https://epiforesite.github.io/idcup/"
+keywords:
+  - "epidemiology"
+  - "measles"
+  - "agent-based models"
