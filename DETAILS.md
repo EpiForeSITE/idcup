@@ -203,10 +203,10 @@ The canonical, cited table of measles parameters lives in the `measles` R packag
 | Hospitalization period (`hospitalization_period`) | 7 days | 7 | Assumption | Passed explicitly; same as the default. Observed stays are shorter: a mean of 2.1 nights in Utah (Jones et al. 2026). |
 | Days undetected (`days_undetected`) | 2 days | 2 | Assumption: about 2 days from active case to public health notification | Passed explicitly; same as the default. |
 | Quarantine period (`quarantine_period`) | 21 days | 21 | Utah DHHS plan: 21 days since last exposure | Passed explicitly; same as the default. |
-| Quarantine willingness (`quarantine_willingness`) | 0.9 | 1.0 | Assumption (field experience) | **Differs.** Assumes 10% of contacts do not comply with quarantine. |
-| Isolation willingness (`isolation_willingness`) | 0.9 | 1.0 | Assumption (field experience) | **Differs.** Assumes 10% of detected cases do not comply with isolation. |
+| Quarantine willingness (`quarantine_willingness`) | 0.9 | 1.0 | Assumption | **Differs.** Assumes 10% of contacts do not comply with quarantine. |
+| Isolation willingness (`isolation_willingness`) | 0.9 | 1.0 | Assumption | **Differs.** Assumes 10% of detected cases do not comply with isolation. |
 | Isolation period (`isolation_period`) | 4 days | 4 | Utah DHHS plan: isolate until 4 days after rash onset | Passed explicitly; same as the default. |
-| Contact-tracing success (`contact_tracing_success_rate`) | 0.8 | 1.0 | Assumption (field experience) | **Differs.** Assumes 20% of contacts of a detected case are not traced. |
+| Contact-tracing success (`contact_tracing_success_rate`) | 0.8 | 1.0 | Assumption | **Differs.** Assumes 20% of contacts of a detected case are not traced. |
 | Contact-tracing window (`contact_tracing_days_window`) | 4 days | 4 | Assumption; matches the Utah DHHS exposure definition (4 days before through 4 days after rash onset) | Passed explicitly; same as the default. |
 | Rash contact reduction (`rash_reduction_contact_rate`) | 1.0 (default) | 1.0 | Assumption | Agents with rash have no contacts (they stay home). |
 
