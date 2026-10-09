@@ -176,3 +176,40 @@ flowchart LR
 ### Implementation
 
 We are using the [`{measles}`](https://github.com/UofUEpiBio/measles) R package, which runs on the C++ [`epiworld`](https://github.com/UofUEpiBio/epiworld) library.
+
+## Parameters & references
+
+The table lists every parameter of `ModelMeaslesMixing()` used by the city scenarios, including those the template does not pass. It also lists the inputs that set the target R0 and the contact matrix. Values come from [`scenarios/template.qmd`](scenarios/template.qmd). All 11 cities use the same template, so only the city-specific inputs (population, age structure, coverage and initial cases) vary between scenarios.
+
+The canonical, cited table of measles parameters lives in the `measles` R package: [`inst/extdata/measles_parameters.csv`](https://github.com/UofUEpiBio/measles/blob/main/inst/extdata/measles_parameters.csv). The [Parameters and literature references](https://github.com/UofUEpiBio/measles/blob/main/vignettes/parameters.qmd) vignette explains it, and `measles::measles_parameters()` reads it. This project follows [EpiForeSITE/measles#5](https://github.com/EpiForeSITE/measles/issues/5): no values change, and the table records what this project uses and why.
+
+| Parameter | Value used | Source |
+|---|---|---|
+| R0 (calibration target) | 12 | Guerra et al. 2017, *Lancet Infect Dis*, [doi:10.1016/S1473-3099(17)30307-9](https://doi.org/10.1016/S1473-3099(17)30307-9): lower end of the 12–18 range. Not a model argument: it is the `target_rep_number` of `calibrate_mixing_model()`, which scales the contact matrix. |
+| Transmission rate (`transmission_rate`) | 0.2 | Assumption. With a contact matrix, R0 depends on the product of transmission and contacts, so transmission is fixed at 0.2 and the Epistorm-Mix matrix is rescaled so that R0 = 12. The same 0.2 is passed to `calibrate_mixing_model(transmission_prob = 0.2)`. |
+| Infectious period used in calibration | 4 days | Argument `infectious_period_days = 4` of `calibrate_mixing_model()`. It equals the prodromal period, the only infectious stage with contacts: with `rash_reduction_contact_rate = 1`, agents with rash stay home. |
+| Contact matrix (`contact_matrix`) | Epistorm-Mix US total contacts, 5-year age groups to 80+ (`Total-M-by5_80-matrix.csv`), made reciprocal and scaled to R0 = 12 | Litvinova et al. 2025, *medRxiv*, [doi:10.1101/2025.11.20.25340662](https://doi.org/10.1101/2025.11.20.25340662). Data: [epistorm/Epistorm-Mix](https://github.com/epistorm/Epistorm-Mix) at commit [`05966ba`](https://github.com/epistorm/Epistorm-Mix/blob/05966ba49c7b49fb1cd902d6b98b3be0bb2785a8/matrices/M_matrix/Total-M-by5_80-matrix.csv); see also the [Epistorm-Mix page](https://www.epistorm.org/data/epistorm-mix). Downloaded by [`data/mixing_matrix.R`](data/mixing_matrix.R) into `data/mixing_matrix.rds`. Each scenario makes it reciprocal with `make_cmat_symmetric()` using the city's census age structure, so that N(i)·C(i,j) = N(j)·C(j,i), and multiplies it by the scale factor from `calibrate_mixing_model()`. |
+| Calibration method | Next-generation matrix | Diekmann et al. 2010, *J R Soc Interface* 7(47):873–885, [doi:10.1098/rsif.2009.0386](https://doi.org/10.1098/rsif.2009.0386), via `measles::calibrate_mixing_model()`. |
+| Population size (`n`) | min(`max_pop`, city population): 50,000 in the rendered reports (`MAX_POP` in the `Makefile` and the `render_reports` workflow); the template default is 10,000 | [`data/population.csv`](data/population.csv) (U.S. Census Bureau). Cities are scaled down to `max_pop` agents; [`sensitivity_analyses/scaling_analysis.md`](sensitivity_analyses/scaling_analysis.md) explains why downscaling works. |
+| Age structure (entities) | City age counts in 17 groups (0to4 … 80plus), rescaled to `n` | [`data/census_age.csv`](data/census_age.csv): 2024 county-level U.S. Census, via `multigroup.vaccine`. |
+| Vaccination coverage (`prop_vaccinated`) | City MMR coverage from [`data/mmr.csv`](data/mmr.csv), 88.1% (Miami) to 96.7% (New York City), applied to every age group | [CDC MMWR 2023–24 kindergarten vaccination coverage](https://www.cdc.gov/mmwr/volumes/73/wr/mm7341a3.htm). The template passes `prop_vaccinated = 0.95`, but `set_distribution_tool()` then replaces it with the city coverage for every age group. The template also computes an age-adjusted coverage (`vacc_rate_adj`: under-5 coverage from [MMWR 73(38)](https://www.cdc.gov/mmwr/volumes/73/wr/mm7338a3.htm), a linear ramp to 92% for ages 18+), but the scenarios do not use it. |
+| Initial cases (`prevalence`) | Expected number of active cases (at least 1) from reported cases; the "+1 seed" scenario adds one | [JHU CSSE U.S. Measles Data](https://github.com/CSSEGISandData/measles_data), via [`data/measles_cases.csv`](data/measles_cases.csv). The template passes `prevalence = 1`, then replaces it with `distribute_virus_randomly()`. A case reported *d* days ago is counted as active with probability 1 − F(*d*), where F is a geometric CDF (p = 1/4) truncated at 10 days. The mean over 1,000 draws is rounded up. |
+| Vaccine efficacy (`vax_efficacy`) | 0.97 | [Utah DHHS Measles Disease Plan](https://epi.utah.gov/wp-content/uploads/Measles-disease-plan.pdf) ("~97%"); CDC. |
+| Vaccine reduction in recovery (`vax_reduction_recovery_rate`) | 0.5 | Not active: the model ignores it ("(IGNORED) Vax improved recovery"). |
+| Incubation period (`incubation_period`) | 12 days | Utah DHHS plan: exposure to prodrome averages 8–12 days. |
+| Prodromal period (`prodromal_period`) | 4 days | Utah DHHS plan: prodrome lasts 2–4 days (range 2–8); contagious 4 days before rash onset. |
+| Rash period (`rash_period`) | 3 days | Utah DHHS plan: contagious to 4 days after rash onset; infectivity minimal after day 2 of rash. |
+| Hospitalization rate (`hospitalization_rate`) | 0.0370 per day (a 10% probability) | Jones et al. 2026, *NEJM Evid* 5(8), [doi:10.1056/EVIDpha2600141](https://doi.org/10.1056/EVIDpha2600141): 8% overall, 9% among unvaccinated in Utah. The model takes a daily **rate**: a 10% probability p is converted with h = p·(1/rash) / (1 − p) = 0.1 × (1/3) / 0.9 ≈ 0.0370, which inverts p = h / (h + 1/rash). |
+| Hospitalization period (`hospitalization_period`) | 7 days | Assumption. Observed stays are shorter: a mean of 2.1 nights in Utah (Jones et al. 2026). |
+| Days undetected (`days_undetected`) | 2 days | Assumption: about 2 days from active case to public health notification. |
+| Quarantine period (`quarantine_period`) | 21 days | Utah DHHS plan: 21 days since last exposure. |
+| Quarantine willingness (`quarantine_willingness`) | 0.9 | Assumption: 10% of contacts do not comply with quarantine. |
+| Isolation willingness (`isolation_willingness`) | 0.9 | Assumption: 10% of detected cases do not comply with isolation. |
+| Isolation period (`isolation_period`) | 4 days | Utah DHHS plan: isolate until 4 days after rash onset. |
+| Contact-tracing success (`contact_tracing_success_rate`) | 0.8 | Assumption: 20% of contacts of a detected case are not traced. |
+| Contact-tracing window (`contact_tracing_days_window`) | 4 days | Assumption; matches the Utah DHHS exposure definition (4 days before through 4 days after rash onset). |
+| Rash contact reduction (`rash_reduction_contact_rate`) | 1.0 | Assumption: agents with rash have no contacts (they stay home). |
+
+Simulation settings (not epidemiological parameters): 60 days, 200 simulations per scenario, seed 8812 (`params` in `scenarios/template.qmd`).
+
+The sensitivity analysis in [`sensitivity_analyses/scaling_analysis.R`](sensitivity_analyses/scaling_analysis.R) is a methods check, not a city scenario. It uses its own values: R0 8, a synthetic random contact matrix, transmission 0.2, coverage 0.90 and hospitalization rate 0.05 per day. Its other parameters are left at the package defaults.
