@@ -19,6 +19,10 @@ For technical details on the repository layout, data sources, model
 overview, and getting-started instructions, see
 [DETAILS.md](./DETAILS.md).
 
+The model parameters, their values and their sources are listed in the
+[Parameters & references](./DETAILS.md#parameters--references) table
+in DETAILS.md.
+
 # Simulated Measles Outbreaks in US Cities hosting the 2026 FIFA World Cup
 
 > [!CAUTION]
